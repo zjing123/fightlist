@@ -5,21 +5,23 @@
       <h1> </h1>
     </div>
     <group title="cell demo">
-      <cell title="VUX" value="cool" is-link link="hello"></cell>
-    </group>
-    <group title="cell demo">
-      <cell title="VUX" value="cool" is-link link="Tabbar"></cell>
+      <cell title="hello" value="cool" is-link link="/hello"></cell>
+      <cell title="Tabbar" value="cool" is-link link="/tabbar"></cell>
+      <cell title="Button" value="cool" is-link link="/button"></cell>
+      <cell title="Icon" value="cool" is-link link="/icon"></cell>
+      <cell title="Header" value="cool" is-link link="/header"></cell>
     </group>
   </div>
 </template>
 
 <script>
-import { Group, Cell } from 'vux'
+import { Group, Cell, XHeader } from 'vux'
 
 export default {
   components: {
     Group,
-    Cell
+    Cell,
+    XHeader
   },
   data () {
     return {
@@ -28,6 +30,11 @@ export default {
       // preserves its current state and we are modifying
       // its initial state.
       msg: 'Hello World!'
+    }
+  },
+  computed: {
+    title() {
+      return 'Demo';
     }
   }
 }
