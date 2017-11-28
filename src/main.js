@@ -4,27 +4,36 @@ import Vue from 'vue'
 import FastClick from 'fastclick'
 import VueRouter from 'vue-router'
 import App from './App'
+import Vuex from 'vuex'
+import { sync } from 'vuex-router-sync'
 import Home from './components/Home'
-import Hello from './components/HelloWorld'
-import Tabbar from './components/Tabbar'
-import Button from './components/Button'
+import NewGame from './components/Newgame'
+import Sticky from './components/Sticky'
+import Game from './components/Game'
 import Icon from './components/Icon'
 import Header from './components/Header'
 
 Vue.use(VueRouter)
+Vue.use(Vuex)
+
+const store = new Vuex.Store({
+  state: {
+    count: 0
+  }
+})
 
 const routes = [{
   path: '/',
   component: Home
 }, {
-  path: '/hello',
-  component: Hello
+  path: '/newgame',
+  component: NewGame
 }, {
-  path: '/tabbar',
-  component: Tabbar
+  path: '/sticky',
+  component: Sticky
 }, {
-  path: '/button',
-  component: Button
+  path: '/game',
+  component: Game
 }, {
   path: '/icon',
   component: Icon
@@ -37,12 +46,15 @@ const router = new VueRouter({
   routes
 })
 
+sync(store, router)
+
 FastClick.attach(document.body)
 
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
+  store,
   router,
   render: h => h(App)
 }).$mount('#app-box')
