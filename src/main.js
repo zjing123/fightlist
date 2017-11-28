@@ -6,6 +6,7 @@ import VueRouter from 'vue-router'
 import App from './App'
 import Vuex from 'vuex'
 import { sync } from 'vuex-router-sync'
+import store from './store'
 import Home from './components/Home'
 import NewGame from './components/Newgame'
 import Sticky from './components/Sticky'
@@ -15,12 +16,6 @@ import Header from './components/Header'
 
 Vue.use(VueRouter)
 Vue.use(Vuex)
-
-const store = new Vuex.Store({
-  state: {
-    count: 0
-  }
-})
 
 const routes = [{
   path: '/',

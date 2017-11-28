@@ -43,16 +43,16 @@ export default {
     TabbarItem,
   },
   computed: {
-    // ...mapState({
-    //   route: state => state.route,
-    //   path: state => state.route.path,
-    //   deviceready: state => state.app.deviceready,
-    //   demoTop: state => state.vux.demoScrollTop,
-    //   isLoading: state => state.vux.isLoading,
-    //   direction: state => state.vux.direction
-    // }),
+    ...mapState({
+      route: state => state.route,
+      path: state => state.route.path,
+      state: state => state
+    }),
     title() {
-      return 'Demo';
+      console.log(this.state)
+      this.$store.commit('setTitle', 'App')
+
+      return 'Demo-' + this.state.title
     }
   }
 }

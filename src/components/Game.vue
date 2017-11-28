@@ -24,6 +24,8 @@
 
 <script>
 import { Flexbox, FlexboxItem  } from 'vux'
+import { mapState, mapAction} from 'vuex'
+
 export default {
   components: {
     Flexbox,
@@ -34,6 +36,19 @@ export default {
     }
   },
   methods: {
+  },
+  computed: {
+    ...mapState({
+      route: state => state.route,
+      path: state => state.route.path,
+      state: state => state
+    }),
+    title() {
+      console.log(this.state)
+      this.$store.commit('setTitle', 'game')
+
+      return 'Demo-' + this.state.title
+    }
   }
 }
 </script>
