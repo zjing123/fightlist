@@ -16,10 +16,10 @@
   </div>
   <div>
     <group>
-      <cell title="Random opponent" is-link link="/game">
+      <cell title="单人游戏" is-link link="/game">
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../assets/logo.png"/>
       </cell>
-      <cell title="Random opponent" is-link link="/sticky">
+      <cell title="多人游戏" is-link link="/sticky">
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../assets/logo.png"/>
       </cell>
     </group>

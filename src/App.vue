@@ -1,9 +1,9 @@
 <template>
   <div style="height:100%;">
     <view-box ref="viewBox" body-padding-top="46px" body-padding-bottom="55px">
-      <x-header slot="header" :title="title" style="width:100%;position:absolute;left:0;top:0;z-index:100;"></x-header>
+      <x-header slot="header" :title="title" class="header"></x-header>
       <router-view class="router-view" style="height:100%;"></router-view>
-      <tabbar slot="bottom">
+      <tabbar slot="bottom" v-show="path === '/'">
             <tabbar-item selected link="/">
               <img slot="icon" src="./assets/home.png">
               <span slot="label">Home</span>
@@ -40,7 +40,7 @@ export default {
     ViewBox,
     XHeader,
     Tabbar,
-    TabbarItem,
+    TabbarItem
   },
   computed: {
     ...mapState({
@@ -49,9 +49,7 @@ export default {
       state: state => state
     }),
     title() {
-      console.log(this.state)
       this.$store.commit('setTitle', 'App')
-
       return 'Demo-' + this.state.title
     }
   }
@@ -70,7 +68,16 @@ html, body {
 }
 
 body {
-  background-color: #fbf9fe;
+  background-color: #02a2d1;
+}
+
+.header {
+  background-color: #0c7dad;
+  width:100%;
+  position:absolute !important;
+  left:0;
+  top:0;
+  z-index:100;
 }
 
 .router-view {

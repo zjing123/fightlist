@@ -6,40 +6,13 @@ import VueRouter from 'vue-router'
 import App from './App'
 import Vuex from 'vuex'
 import { sync } from 'vuex-router-sync'
+import VueProgress from 'vue-progress'
 import store from './store'
-import Home from './components/Home'
-import NewGame from './components/Newgame'
-import Sticky from './components/Sticky'
-import Game from './components/Game'
-import Icon from './components/Icon'
-import Header from './components/Header'
+import router from './router'
 
 Vue.use(VueRouter)
 Vue.use(Vuex)
-
-const routes = [{
-  path: '/',
-  component: Home
-}, {
-  path: '/newgame',
-  component: NewGame
-}, {
-  path: '/sticky',
-  component: Sticky
-}, {
-  path: '/game',
-  component: Game
-}, {
-  path: '/icon',
-  component: Icon
-}, {
-  path: '/header',
-  component: Header
-}]
-
-const router = new VueRouter({
-  routes
-})
+Vue.use(VueProgress)
 
 sync(store, router)
 
