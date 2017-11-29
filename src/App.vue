@@ -2,6 +2,7 @@
   <div style="height:100%;">
     <view-box ref="viewBox" body-padding-top="46px" body-padding-bottom="55px">
       <x-header slot="header" :title="title" class="header"></x-header>
+       <progress-bar type="line" ref="line" :options="options"></progress-bar>
       <router-view class="router-view" style="height:100%;"></router-view>
       <tabbar slot="bottom" v-show="path === '/'">
             <tabbar-item selected link="/">
@@ -51,6 +52,14 @@ export default {
     title() {
       this.$store.commit('setTitle', 'App')
       return 'Demo-' + this.state.title
+    }
+  },
+  data(){
+    return {
+      options:{
+        color: '#007AFF',
+        strokeWidth: 0.5
+      }
     }
   }
 }

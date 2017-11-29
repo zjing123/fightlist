@@ -24,9 +24,9 @@
     </div>
     <div style="text-align:center;" v-show="gameStart">
       <div style="padding:10px 0 5px 0;margin-left:5%;height:80%;width:90%;">
-        <box>
-          <x-progress :percent="times" :show-cancel="false"></x-progress>
-        </box>
+        <div>
+        <vm-progress :percentage="70" :text-inside="true" :stroke-width="18" :striped="striped"></vm-progress>
+        </div>
         <panel :header="questions[questionId].question"  :type="type" @on-img-error="onImgError"></panel>
         <div class="scroller-pre">
           <scroller lock-x height="-200" ref="scroller" class="answer-content">
@@ -60,6 +60,7 @@
 <script>
 import { Flexbox, FlexboxItem, XButton, Group, Panel, Scroller, XInput, XTable, Box, XProgress  } from 'vux'
 import { mapState, mapAction} from 'vuex'
+import VmProgress from 'vue-multiple-progress'
 
 export default {
   components: {
@@ -72,7 +73,8 @@ export default {
     XInput,
     XTable,
     Box,
-    XProgress
+    XProgress,
+    VmProgress
   },
   data () {
     return {
@@ -80,7 +82,8 @@ export default {
       type: '4',
       questionId: 1,
       answers: [],
-      times: 100
+      times: 100,
+       striped: true
     }
   },
   methods: {
