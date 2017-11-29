@@ -25,7 +25,7 @@
     <div style="text-align:center;" v-show="gameStart">
       <div style="padding:10px 0 5px 0;margin-left:5%;height:80%;width:90%;">
         <div>
-        <vm-progress :percentage="70" :text-inside="true" :stroke-width="18" :striped="striped"></vm-progress>
+        <vm-progress :percentage="70" :text-inside="true" :stroke-width="18" :striped="striped">70<b>s</b></vm-progress>
         </div>
         <panel :header="questions[questionId].question"  :type="type" @on-img-error="onImgError"></panel>
         <div class="scroller-pre">
