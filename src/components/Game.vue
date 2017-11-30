@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="game-round-info" v-show="!gameStart">
+    <div class="game-round-info">
       <flexbox class="round-user">
            <flexbox-item>
              <div class="flex-round-user">
@@ -18,48 +18,91 @@
              </div>
            </flexbox-item>
       </flexbox>
-      <div class="play-button">
-        <x-button type="primary" @click.native="playGame">开始游戏</x-button>
-      </div>
     </div>
-    <div style="text-align:center;" v-show="gameStart">
-      <div style="padding:10px 0 5px 0;margin-left:5%;height:80%;width:90%;">
-        <div>
-        <vm-progress :percentage="70" :text-inside="true" :stroke-width="18" :striped="striped">70<b>s</b></vm-progress>
-        </div>
-        <panel :header="questions[questionId].question"  :type="type" @on-img-error="onImgError"></panel>
-        <div class="scroller-pre">
-          <scroller lock-x height="-200" ref="scroller" class="answer-content">
+    <div style="text-align:center;" v-if="result" v-show="gameState !== 1">
+      <div style="padding:10px 0 5px 0;margin-left:5%;height:70%;width:90%;">
+        <div class="scroller-pre scroller-pre-nopadding">
+          <panel :header="result.question"  :type="type" @on-img-error="onImgError"></panel>
+          <scroller lock-x height="-380" ref="scroller" class="answer-content-no-radius">
              <div class="box2">
-               <div  v-if="answers.length">
+               <div  v-if="result.answers.length">
                  <x-table :cell-bordered="false">
                   <tbody>
-                    <tr v-for="i in answers">
-                      <td style="width:60%;text-align:left;padding-left:20%;">{{i.name}}</td>
-                      <td style="text-align:left;padding-left:10%;">{{i.num}}</td>
+                    <tr v-for="answer in result.answers">
+                      <td style="width:60%;text-align:left;padding-left:20%;">{{answer.title}}</td>
+                      <td style="text-align:left;padding-left:10%;">
+                        <span :class="[clasScoreNum, clasScoreNum + '-' + answer.score]">{{answer.score != 0 ? '+' : ''}}{{answer.score}}</span>
+                      </td>
                     </tr>
                   </tbody>
                 </x-table>
                </div>
-
              </div>
           </scroller>
+          <div style="background:#f8f8f8;height:40px;">
+            <flexbox>
+              <flexbox-item>
+                <div class="flex-demo prev-game" v-show="resultIndex != 0">
+                  <a href="javascript:void(0);" @click.navite="indexDecrement">上一个</a>
+                </div>
+            </flexbox-item>
+              <flexbox-item>
+                <div class="flex-demo">
+                  <strong>得分： {{ getScore }}</strong>
+                </div>
+                </flexbox-item>
+              <flexbox-item>
+                <div class="flex-demo next-game" v-show="resultIndex != results.length - 1">
+                  <a href="javascript:void(0);" @click.navite="indexIncrement">下一个</a>
+                </div>
+            </flexbox-item>
+            </flexbox>
+          </div>
+          <div style="height:40px;">
+            <box>
+              <x-button class="show-answer-btn" type="primary" @click.native="showAnswer" >查看答案</x-button>
+            </box>
+          </div>
         </div>
-        <div style="margin-top:15px;">
-          <group>
-            <x-input class="weui-vcode" placeholder="答案..." :show-clear="false"  @on-enter="onEnter" ref="answerInput">
-              <x-button slot="right" type="primary" mini>确认</x-button>
-            </x-input>
-          </group>
+        <div style="margin-top:10px;" v-show="gameState == 2">
+          <x-button type="primary" link="/play" @click.native="questionIndexIncrement">继续游戏</x-button>
+        </div>
+        <div style="margin-top:10px;" v-show="gameState == 3">
+          <x-button type="primary" link="/">返回首页</x-button>
         </div>
       </div>
+    </div>
+    <div class="play-button" v-show="gameState == 1">
+      <x-button type="primary" link="/play">开始游戏</x-button>
+    </div>
+    <div>
+      <x-dialog v-model="showAnswerBox">
+        <div v-if="result">
+          <panel :header="questions[result.questionId].question"  :type="type" @on-img-error="onImgError"></panel>
+          <div class="box2" style="height:200px;padding:0 0 15px;overflow:scroll;-webkit-overflow-scrolling:touch;">
+            <div  v-if="questions[questionId].answers.length">
+              <x-table :cell-bordered="false">
+               <tbody>
+                 <tr v-for="i in questions[result.questionId].answers">
+                   <td style="width:60%;text-align:left;padding-left:20%;">{{i}}</td>
+                   <td style="text-align:left;padding-left:10%;"><span class="score-num score-num-1">+1</span></td>
+                 </tr>
+               </tbody>
+             </x-table>
+            </div>
+          </div>
+           <div @click="showAnswerBox=false">
+             <span class="vux-close"></span>
+           </div>
+        </div>
+      </x-dialog>
     </div>
   </div>
 </template>
 
 <script>
-import { Flexbox, FlexboxItem, XButton, Group, Panel, Scroller, XInput, XTable, Box, XProgress  } from 'vux'
-import { mapState, mapAction} from 'vuex'
+import { Flexbox, FlexboxItem, XButton, Group, Panel, Scroller, XInput, XTable, Box, XProgress, XDialog  } from 'vux'
+import { mapState, mapActions, mapGetters, mapMutations} from 'vuex'
 import VmProgress from 'vue-multiple-progress'
 
 export default {
@@ -74,38 +117,32 @@ export default {
     XTable,
     Box,
     XProgress,
-    VmProgress
+    VmProgress,
+    XDialog
   },
   data () {
     return {
-      gameStart: false,
+      gameStart: 1,
       type: '4',
       questionId: 1,
       answers: [],
       times: 100,
-       striped: true
+      striped: true,
+      showAnswerBox: false,
+      clasScoreNum: 'score-num'
     }
   },
   methods: {
-    playGame() {
-      let me = this;
-      me.gameStart = true
-      // let interval = window.setInterval(function() {
-      //     if ((me.times--) <= 0) {
-      //       window.clearInterval(interval);
-      //     }
-      //   }, 1000);
-    },
     onImgError(item, $event) {
-      console.log(item, $event)
     },
-   onEnter(value, $event) {
-     let name = value
-     let score = this.questions[this.questionId].answers.findIndex(x => x == value) !== -1 ? 1 : 0
-     this.answers.push({name:name, num:score})
-     this.$refs.answerInput.reset()
-     this.$refs.answerInput.blur()
-   }
+    ...mapMutations([
+      'indexIncrement',
+      'indexDecrement',
+      'questionIndexIncrement'
+    ]),
+    showAnswer() {
+      this.showAnswerBox = true
+    }
   },
   computed: {
     ...mapState({
@@ -114,21 +151,39 @@ export default {
       state: state => state,
       questions: state => state.questions,
       question: state => state.questions,
-      time: state => state.time
+      time: state => state.time,
+      percentage: state => state.percentage,
+      results: state => state.results,
+      result: state => state.results[state.index],
+      resultIndex: state => state.index
     }),
+    gameState() {
+      let len = this.results.length;
+      if(len == 0) {
+        return 1;
+      } else if (len < 3) {
+        return 2;
+      } {
+        return 3;
+      }
+    },
     title() {
-      console.log(this.state)
       this.$store.commit('setTitle', 'game')
-
       return 'Demo-' + this.state.title
+    },
+    getScore() {
+      let score = 0;
+      for( var i in this.result.answers) {
+        score += this.result.answers[i].score;
+      }
+      return score;
     }
   },
   mounted() {
     this.$nextTick(()=>{
-      this.$refs.scroller.reset({top:0});
-    }),
-    this.$refs.answerInput.focus()
-  },
+      //this.$refs.scroller.reset({top:0});
+    })
+  }
 }
 </script>
 <style scoped>
@@ -157,6 +212,7 @@ export default {
     }
 
     .play-button {
+      padding: 10px 15px;
       margin-top: 50px;
     }
 
@@ -167,27 +223,87 @@ export default {
       font-size:1.5em;
       font-weight: bold;
     }
-    .weui-cells {
 
-    }
     .weui-cells__title {
       background-color:#fff;
       color: #999999;
       font-size: 13px;
+    }
+    .show-answer-btn {
+      border-radius: 0 0 5px 5px;
+      background-color:#ffba00 !important;
     }
     .scroller-pre {
       background:#d1d1d1;
       padding-bottom:4px;
       border-radius: 0 0 5px 5px;
     }
+    .scroller-pre-nopadding {
+      padding-bottom:0;
+    }
     .answer-content {
       background-color:#fff;
       border-radius: 0 0 5px 5px;
     }
-    .weui-vcode {
-      /*padding:0 !important;*/
+    .answer-content-no-radius {
+      background-color:#fff;
     }
-    .weui-progress__bar {
-      height:30px !important;
+
+    .score-num {
+      font-size: 12px;
+      font-weight: bold;
+      width:40px;
+      height:30px;
+      line-height: 30px;
+      color:#fff;
+      border-radius:5px;
+      text-align: center;
+      display: inline-block;
+      padding: 0 3px;
     }
+    .score-num-0 {
+      background-color:#b8b8b8;
+    }
+    .score-num-1 {
+      background-color: #01d72f;
+    }
+    .score-num-2 {
+      background-color: #fd8324;
+    }
+    .score-num-3 {
+      background-color: #b966f3;
+    }
+    .box1 {
+
+  position: relative;
+  width:1400px;
+}
+.box1-item {
+  width: 200px;
+  height: 100px;
+  background-color: #ccc;
+  display:inline-block;
+  float: left;
+  text-align: center;
+  line-height: 100px;
+  margin-left:15px;
+  padding:10px 0 5px 0;
+  height:80%;
+  width:300px;
+}
+
+.box1-item:first-child {
+  margin-left: 15px;
+}
+
+.flex-demo {
+  text-align: center;
+  line-height: 40px;
+}
+.next-game, .prev-game {
+  color:#2d84cc;
+}
+.next-game a, .prev-gama a {
+  display: inline-block;
+}
 </style>

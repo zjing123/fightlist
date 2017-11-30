@@ -31,6 +31,10 @@ export default new Router({
     component: Header
   }, {
     path: '/play',
-    component: Play
+    component: Play,
+    // beforeEnter:(to, from, next) =>{
+    //   alert(1)
+    //   next()
+    // }
   }]
 })

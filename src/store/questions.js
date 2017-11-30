@@ -1,5 +1,6 @@
 export const questions = {
   1: {
+    questionId:1,
     question: '写出能想到的蔬菜的名称',
     answers: [
       '白菜',
@@ -19,6 +20,7 @@ export const questions = {
     ]
   },
   2: {
+    questionId:2,
     question: '写出能想到的水果的名称',
     answers:[
       '苹果',
@@ -49,6 +51,7 @@ export const questions = {
     ]
   },
   3: {
+    questionId:3,
     question: '写出常见的动物的名称',
     answers:[
       '虎',

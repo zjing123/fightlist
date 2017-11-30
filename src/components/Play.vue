@@ -1,109 +1,180 @@
 <template>
-  <div style="text-align:center;">
-    <div style="padding:10px 0 5px 0;margin-left:5%;height:80%;width:90%;">
-      <panel :header="questions[questionId].question"  :type="type" @on-img-error="onImgError"></panel>
-      <div class="scroller-pre">
-        <scroller lock-x height="-200" ref="scroller" class="answer-content">
-           <div class="box2">
-             <div  v-if="answers.length">
-               <x-table :cell-bordered="false">
-                <tbody>
-                  <tr v-for="i in answers">
-                    <td style="width:60%;text-align:left;padding-left:20%;">{{i.name}}</td>
-                    <td style="text-align:left;padding-left:10%;">{{i.num}}</td>
-                  </tr>
-                </tbody>
-              </x-table>
+  <div>
+    <div style="text-align:center;" >
+      <div style="padding:10px 0 5px 0;margin-left:5%;height:80%;width:90%;">
+        <div>
+        <vm-progress :percentage="percentage" :text-inside="true" :stroke-width="18" :striped="striped">{{time}}<b>s</b></vm-progress>
+        </div>
+        <panel :header="questions[questionId].question"  :type="type" @on-img-error="onImgError"></panel>
+        <div class="scroller-pre">
+          <scroller lock-x height="-250" ref="scroller" class="answer-content">
+             <div class="box2">
+               <div  v-if="result.answers.length">
+                 <x-table :cell-bordered="false">
+                  <tbody>
+                    <tr v-for="answer in result.answers">
+                      <td style="width:60%;text-align:left;padding-left:20%;">{{answer.title}}</td>
+                      <td style="text-align:left;padding-left:10%;">{{answer.score}}</td>
+                    </tr>
+                  </tbody>
+                </x-table>
+               </div>
              </div>
-
-           </div>
-        </scroller>
-      </div>
-      <div style="margin-top:15px;">
-        <group>
-          <x-input class="weui-vcode" placeholder="答案..." :show-clear="false"  @on-enter="onEnter" ref="answerInput">
-            <x-button slot="right" type="primary" mini>确认</x-button>
-          </x-input>
-        </group>
+          </scroller>
+        </div>
+        <div style="margin-top:15px;">
+          <group>
+            <x-input class="weui-vcode" placeholder="答案..." :show-clear="false" :disabled="disabled" @on-enter="onEnter" ref="answerInput">
+              <x-button slot="right" type="primary" mini>确认</x-button>
+            </x-input>
+          </group>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-
 <script>
-import { Group, Panel, Scroller, XButton, XInput, XTable  } from 'vux'
-import { mapState, mapGetters, mapAction} from 'vuex'
+import { XButton, Group, Panel, Scroller, XInput, XTable, Box  } from 'vux'
+import { mapState, mapActions, mapMutations} from 'vuex'
+import VmProgress from 'vue-multiple-progress'
 
 export default {
   components: {
+    XButton,
     Group,
     Panel,
     Scroller,
-    XButton,
     XInput,
-    XTable
+    XTable,
+    Box,
+    VmProgress,
   },
-  data() {
+  data () {
     return {
+      gameStart: 1,
       type: '4',
-      questionId: 1,
-      answers: []
+      result: {
+        questionId: null,
+        question: null,
+        answers:[]
+      },
+      striped: true,
+      showAnswerBox: false
     }
   },
   methods: {
+    playGame() {
+      let me = this;
+      me.gameStart = 2
+      me.start()
+    },
     onImgError(item, $event) {
-      console.log(item, $event)
     },
    onEnter(value, $event) {
      let name = value
      let score = this.questions[this.questionId].answers.findIndex(x => x == value) !== -1 ? 1 : 0
-     this.answers.push({name:name, num:score})
+     this.result.answers.push({title:name, score:score})
      this.$refs.answerInput.reset()
-     this.$refs.answerInput.blur()
-   }
- },
- mounted() {
-   this.$nextTick(()=>{
-     this.$refs.scroller.reset({top:0});
-   }),
-   this.$refs.answerInput.focus()
- },
- computed: {
-   ...mapState({
-     questions: state => state.questions,
-     question: state => state.questions
-   })
- }
+     this.$refs.answerInput.focus()
+   },
+   ...mapMutations([
+     'pushResult'
+   ])
+  },
+  computed: {
+    ...mapState({
+      route: state => state.route,
+      path: state => state.route.path,
+      state: state => state,
+      questions: state => state.questions,
+      question: state => state.questions,
+      questionId: state => state.questionIndex,
+      time: state => state.time,
+      percentage: state => state.percentage
+    }),
+    title() {
+      this.$store.commit('setTitle', 'game')
+      return 'Demo-' + this.state.title
+    },
+    disabled() {
+      return this.time <= 0;
+    }
+  },
+  mounted() {
+    this.$nextTick(()=>{
+      this.$refs.scroller.reset({top:0});
+    }),
+    this.$refs.answerInput.focus()
+  },
+  watch: {
+    "$store.state.time": function() {
+      if(this.time <= 0) {
+        this.result.questionId = this.questionId
+        this.result.question = this.questions[this.questionId].question
+        this.pushResult(this.result)
+        this.$router.go(-1)
+      }
+    }
+  }
 }
 </script>
+<style scoped>
+    .weui-panel__hd {
+      text-align: center;
+      background-color:#d9d9d9;
+      color:#939393;
+      font-size:1.5em;
+      font-weight: bold;
+    }
+    .weui-cells {
 
-<style>
-.weui-panel__hd {
-  text-align: center;
-  background-color:#d9d9d9;
-  color:#939393;
-  font-size:1.5em;
-  font-weight: bold;
-}
-.weui-cells {
+    }
+    .weui-cells__title {
+      background-color:#fff;
+      color: #999999;
+      font-size: 13px;
+    }
 
-}
-.weui-cells__title {
-  background-color:#fff;
-  color: #999999;
-  font-size: 13px;
-}
-.scroller-pre {
-  background:#d1d1d1;
-  padding-bottom:4px;
-  border-radius: 0 0 5px 5px;
-}
-.answer-content {
-  background-color:#fff;
-  border-radius: 0 0 5px 5px;
-}
-.weui-vcode {
-  /*padding:0 !important;*/
-}
+    .scroller-pre {
+      background:#d1d1d1;
+      padding-bottom:4px;
+      border-radius: 0 0 5px 5px;
+    }
+
+    .answer-content {
+      background-color:#fff;
+      border-radius: 0 0 5px 5px;
+    }
+
+    .weui-vcode {
+      /*padding:0 !important;*/
+    }
+    .weui-progress__bar {
+      height:30px !important;
+    }
+    .score-num {
+      font-size: 12px;
+      font-weight: bold;
+      width:40px;
+      height:30px;
+      line-height: 30px;
+      color:#fff;
+      border-radius:5px;
+      text-align: center;
+      display: inline-block;
+      padding: 0 3px;
+    }
+    .score-num-0 {
+      background-color:#b8b8b8;
+    }
+    .score-num-1 {
+      background-color: #01d72f;
+    }
+    .score-num-2 {
+      background-color: #fd8324;
+    }
+    .score-num-3 {
+      background-color: #b966f3;
+    }
 </style>

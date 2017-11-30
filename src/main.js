@@ -14,6 +14,16 @@ Vue.use(Vuex)
 
 sync(store, router)
 
+router.afterEach((to, from) => {
+  if(to.path == '/play') {
+    store.dispatch('start');
+  }
+
+  if(to.path == '/game') {
+    store.commit('initParams')
+  }
+})
+
 FastClick.attach(document.body)
 
 Vue.config.productionTip = false

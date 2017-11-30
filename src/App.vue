@@ -1,7 +1,7 @@
 <template>
   <div style="height:100%;">
     <view-box ref="viewBox" body-padding-top="46px" body-padding-bottom="55px">
-      <x-header slot="header" :title="title" class="header"></x-header>
+      <x-header slot="header" :title="title" class="header" ></x-header>
       <router-view class="router-view" style="height:100%;"></router-view>
       <tabbar slot="bottom" v-show="path === '/'">
             <tabbar-item selected link="/">
@@ -53,12 +53,10 @@ export default {
       return 'Demo-' + this.state.title
     }
   },
+  methods: {
+  },
   data(){
     return {
-      options:{
-        color: '#007AFF',
-        strokeWidth: 0.5
-      }
     }
   }
 }
@@ -68,6 +66,7 @@ export default {
 @import '~vux/src/styles/reset.less';
 @import '~vux/src/styles/1px.less';
 @import '~vux/src/styles/tap.less';
+@import '~vux/src/styles/close.less';
 
 html, body {
   height: 100%;
