@@ -46,12 +46,9 @@ export default {
     ...mapState({
       route: state => state.route,
       path: state => state.route.path,
-      state: state => state
-    }),
-    title() {
-      this.$store.commit('setTitle', 'App')
-      return 'Demo-' + this.state.title
-    }
+      state: state => state,
+      title: state => state.title
+    })
   },
   methods: {
   },
@@ -67,6 +64,7 @@ export default {
 @import '~vux/src/styles/1px.less';
 @import '~vux/src/styles/tap.less';
 @import '~vux/src/styles/close.less';
+@import './assets/css/vue-instant-search-custom.css';
 
 html, body {
   height: 100%;

@@ -7,13 +7,13 @@ import { questions } from './questions'
 
 Vue.use(Vuex)
 const state = {
-  username:'Guest',
-  time:30,/*30s*/
+  username: 'Guest',
+  time: 30,/*30s*/
   percentage: 100,
   speed: 100 / 30,
-  title:'',
-  index:0,
-  questionIndex:1,
+  title: '',
+  index: 0,
+  questionIndex: 1,
   results: [/*{
     questionId:1,
     question: '1',

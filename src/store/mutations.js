@@ -12,18 +12,19 @@ export const indexDecrement = state => {
 
 export const questionIndexIncrement = state => {
   state.questionIndex++
+  if(state.index < state.results.length -1) {
+    state.index++
+  }
 }
 
 export const setTitle = (state, title) => {
   state.title = title
 }
 
-export const start = (state, timer) => {
-  if(state.time >0) {
+export const start = state => {
+  if(state.time > 0) {
     state.time--;
     state.percentage = state.percentage - state.speed;
-  } else {
-    clearInterval(timer);
   }
 }
 
@@ -34,4 +35,8 @@ export const initParams = state => {
 
 export const pushResult = (state, result) => {
   state.results.push(result);
+}
+
+export const setQuestionIndexToIndex = state => {
+  state.index = state.questionIndex - 1
 }

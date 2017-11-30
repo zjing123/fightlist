@@ -1,7 +1,7 @@
 <template>
   <div>
     <box gap="10px 10px">
-       <x-button type="primary" link="/newgame">New Game</x-button>
+       <x-button type="primary" link="/newgame">新游戏</x-button>
     </box>
   </div>
 </template>

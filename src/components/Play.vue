@@ -5,7 +5,7 @@
         <div>
         <vm-progress :percentage="percentage" :text-inside="true" :stroke-width="18" :striped="striped">{{time}}<b>s</b></vm-progress>
         </div>
-        <panel :header="questions[questionId].question"  :type="type" @on-img-error="onImgError"></panel>
+        <panel :header="questions[questionId].question"  :type="panelType" @on-img-error="onImgError"></panel>
         <div class="scroller-pre">
           <scroller lock-x height="-250" ref="scroller" class="answer-content">
              <div class="box2">
@@ -14,7 +14,9 @@
                   <tbody>
                     <tr v-for="answer in result.answers">
                       <td style="width:60%;text-align:left;padding-left:20%;">{{answer.title}}</td>
-                      <td style="text-align:left;padding-left:10%;">{{answer.score}}</td>
+                      <td style="text-align:left;padding-left:10%;">
+                        <span :class="[clasScoreNum, clasScoreNum + '-' + answer.score]">{{answer.score != 0 ? '+' : ''}}{{answer.score}}</span>
+                      </td>
                     </tr>
                   </tbody>
                 </x-table>
@@ -53,34 +55,31 @@ export default {
   data () {
     return {
       gameStart: 1,
-      type: '4',
+      panelType: '4',
       result: {
         questionId: null,
         question: null,
-        answers:[]
+        answers: []
       },
       striped: true,
-      showAnswerBox: false
+      showAnswerBox: false,
+      clasScoreNum: 'score-num'
     }
   },
   methods: {
-    playGame() {
-      let me = this;
-      me.gameStart = 2
-      me.start()
+    onImgError (item, $event) {
     },
-    onImgError(item, $event) {
+    onEnter (value, $event) {
+      let name = value
+      let score = this.questions[this.questionId].answers.findIndex(x => x === value) !== -1 ? 1 : 0
+      this.result.answers.push({title: name, score: score})
+      this.$refs.answerInput.reset()
+      this.$refs.answerInput.focus()
     },
-   onEnter(value, $event) {
-     let name = value
-     let score = this.questions[this.questionId].answers.findIndex(x => x == value) !== -1 ? 1 : 0
-     this.result.answers.push({title:name, score:score})
-     this.$refs.answerInput.reset()
-     this.$refs.answerInput.focus()
-   },
-   ...mapMutations([
-     'pushResult'
-   ])
+    ...mapMutations([
+      'pushResult',
+      'setQuestionIndexToIndex'
+    ])
   },
   computed: {
     ...mapState({
@@ -93,26 +92,23 @@ export default {
       time: state => state.time,
       percentage: state => state.percentage
     }),
-    title() {
-      this.$store.commit('setTitle', 'game')
-      return 'Demo-' + this.state.title
-    },
-    disabled() {
-      return this.time <= 0;
+    disabled () {
+      return this.time <= 0
     }
   },
-  mounted() {
-    this.$nextTick(()=>{
-      this.$refs.scroller.reset({top:0});
-    }),
-    this.$refs.answerInput.focus()
+  mounted () {
+    this.$nextTick(() => {
+      this.$refs.scroller.reset({top: 0})
+      this.$refs.answerInput.focus()
+    })
   },
   watch: {
-    "$store.state.time": function() {
-      if(this.time <= 0) {
+    '$store.state.time': function () {
+      if (this.time <= 0) {
         this.result.questionId = this.questionId
         this.result.question = this.questions[this.questionId].question
         this.pushResult(this.result)
+        this.setQuestionIndexToIndex()
         this.$router.go(-1)
       }
     }

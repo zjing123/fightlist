@@ -10,10 +10,8 @@
   @on-focus="onFocus"
   @on-cancel="onCancel"
   @on-submit="onSubmit"
+  :autoFixed="false"
   ref="search"></search>
-  <div style="padding:15px;">
-    <x-button @click.native="setFocus" type="primary">set focus</x-button>
-  </div>
   <div>
     <group>
       <cell title="单人游戏" is-link link="/game">
@@ -60,7 +58,7 @@ export default {
   data () {
     return {
       results: [],
-      value: 'test'
+      value: ''
     }
   }
 }

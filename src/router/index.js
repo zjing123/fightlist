@@ -12,29 +12,32 @@ Vue.use(Router)
 
 export default new Router({
   routes: [{
+    name: 'Home',
     path: '/',
     component: Home
   }, {
+    name: 'NewGame',
     path: '/newgame',
     component: NewGame
   }, {
+    name: 'Sticky',
     path: '/sticky',
     component: Sticky
   }, {
+    name: 'Game',
     path: '/game',
     component: Game
   }, {
+    name: 'Icon',
     path: '/icon',
     component: Icon
   }, {
+    name: 'Header',
     path: '/header',
     component: Header
   }, {
+    name: 'Play',
     path: '/play',
-    component: Play,
-    // beforeEnter:(to, from, next) =>{
-    //   alert(1)
-    //   next()
-    // }
+    component: Play
   }]
 })

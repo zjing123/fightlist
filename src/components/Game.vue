@@ -133,14 +133,15 @@ export default {
     }
   },
   methods: {
-    onImgError(item, $event) {
+    onImgError (item, $event) {
     },
     ...mapMutations([
       'indexIncrement',
       'indexDecrement',
-      'questionIndexIncrement'
+      'questionIndexIncrement',
+      'setTitle'
     ]),
-    showAnswer() {
+    showAnswer () {
       this.showAnswerBox = true
     }
   },
@@ -155,9 +156,9 @@ export default {
       percentage: state => state.percentage,
       results: state => state.results,
       result: state => state.results[state.index],
-      resultIndex: state => state.index
+      resultIndex: state => state.index,
     }),
-    gameState() {
+    gameState () {
       let len = this.results.length;
       if(len == 0) {
         return 1;
@@ -167,12 +168,12 @@ export default {
         return 3;
       }
     },
-    title() {
+    title () {
       this.$store.commit('setTitle', 'game')
       return 'Demo-' + this.state.title
     },
-    getScore() {
-      let score = 0;
+    getScore () {
+      let score = 0
       for( var i in this.result.answers) {
         score += this.result.answers[i].score;
       }
@@ -181,7 +182,6 @@ export default {
   },
   mounted() {
     this.$nextTick(()=>{
-      //this.$refs.scroller.reset({top:0});
     })
   }
 }
