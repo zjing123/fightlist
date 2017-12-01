@@ -1,6 +1,6 @@
 <template>
   <div>
-  <search
+  <!-- <search
   @result-click="resultClick"
   @on-change="getResult"
   :results="results"
@@ -11,15 +11,15 @@
   @on-cancel="onCancel"
   @on-submit="onSubmit"
   :autoFixed="false"
-  ref="search"></search>
+  ref="search"></search> -->
   <div>
     <group>
       <cell title="单人游戏" is-link link="/game">
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../assets/logo.png"/>
       </cell>
-      <cell title="多人游戏" is-link link="/sticky">
+      <!-- <cell title="多人游戏" is-link link="/sticky">
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../assets/logo.png"/>
-      </cell>
+      </cell> -->
     </group>
   </div>
 </div>

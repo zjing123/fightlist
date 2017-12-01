@@ -27,9 +27,12 @@ router.afterEach((to, from) => {
     store.commit('initParams')
   }
 
-  if(to.path == '/game') {
-    //store.commit('initParams')
+  if(to.path == '/') {
+    store.commit('disableShowBack')
+  } else {
+    store.commit('enableShowBack')
   }
+
   store.commit('setTitle', getRouterTitle(to.name))
 })
 

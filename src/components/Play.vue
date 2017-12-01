@@ -77,7 +77,7 @@ export default {
       this.$refs.answerInput.focus()
     },
     ...mapMutations([
-      'pushResult',
+      'pushCurrentResult',
       'setQuestionIndexToIndex'
     ])
   },
@@ -107,7 +107,7 @@ export default {
       if (this.time <= 0) {
         this.result.questionId = this.questionId
         this.result.question = this.questions[this.questionId].question
-        this.pushResult(this.result)
+        this.pushCurrentResult(this.result)
         this.setQuestionIndexToIndex()
         this.$router.go(-1)
       }

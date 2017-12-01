@@ -1,28 +1,12 @@
 <template>
   <div style="height:100%;">
     <view-box ref="viewBox" body-padding-top="46px" body-padding-bottom="55px">
-      <x-header slot="header" :title="title" class="header" ></x-header>
+      <x-header slot="header" :title="title" class="header" :left-options="{showBack: showBack}"></x-header>
       <router-view class="router-view" style="height:100%;"></router-view>
       <tabbar slot="bottom" v-show="path === '/'">
-            <tabbar-item selected link="/">
-              <img slot="icon" src="./assets/home.png">
-              <span slot="label">Home</span>
-            </tabbar-item>
-            <tabbar-item>
-              <img slot="icon" src="./assets/profile.png">
-              <span slot="label">Profile</span>
-            </tabbar-item>
-            <tabbar-item>
-              <img slot="icon" src="./assets/ranking.png">
-              <span slot="label">Ranking</span>
-            </tabbar-item>
-            <tabbar-item>
-              <img slot="icon" src="./assets/shop.png">
-              <span slot="label">Shop</span>
-            </tabbar-item>
-            <tabbar-item>
-              <img slot="icon" src="./assets/settings.png">
-              <span slot="label">Settings</span>
+            <tabbar-item  v-for="(tabbar, index) in tabbars" v-if="tabbar.show" :selected="tabbar.selected" :link="tabbar.link" :key="index">
+              <img slot="icon" :src="tabbar.icon">
+              <span slot="label">{{ tabbar.title }}</span>
             </tabbar-item>
       </tabbar>
     </view-box>
@@ -33,6 +17,7 @@
 
 import { ViewBox, XHeader, Tabbar, TabbarItem } from 'vux'
 import { mapState, mapAction} from 'vuex'
+import tabbars from './config/tabbar.config'
 
 export default {
   name: 'app',
@@ -47,13 +32,15 @@ export default {
       route: state => state.route,
       path: state => state.route.path,
       state: state => state,
-      title: state => state.title
+      title: state => state.title,
+      showBack: state => state.showBack
     })
   },
   methods: {
   },
   data(){
     return {
+      tabbars: tabbars
     }
   }
 }

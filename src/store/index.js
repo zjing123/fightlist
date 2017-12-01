@@ -14,67 +14,130 @@ const state = {
   title: '',
   index: 0,
   questionIndex: 1,
-  results: [/*{
-    questionId:1,
-    question: '1',
-    answers: [
-      {
-        title:'白菜',
-        score: 1
-      },
-      {
-        title:'白菜',
-        score: 1
-      },
-      {
-        title:'白菜',
-        score: 1
-      }
-    ]
-  },
-  {
-    questionId:2,
-    question: '2',
-    answers: [
-      {
-        title:'白菜2',
-        score: 2
-      },
-      {
-        title:'白菜2',
-        score: 1
-      },
-      {
-        title:'白菜2',
-        score: 1
-      }
-    ]
-  },
-  {
-    questionId:3,
-    question: '3',
-    answers: [
-      {
-        title:'白菜3',
-        score: 1
-      },
-      {
-        title:'白菜3',
-        score: 1
-      },
-      {
-        title:'白菜3',
-        score: 1
-      }
-    ]
-  }*/
+  currentResults:[
     /*
-    {question
-      answers:[{title,score}]
+    {
+      questionId:1,
+      question: '1',
+      answers: [
+        {
+          title:'白菜',
+          score: 1
+        },
+        {
+          title:'白菜',
+          score: 1
+        },
+        {
+          title:'白菜',
+          score: 1
+        }
+      ]
     }
-    */
+     */
   ],
-  questions: questions
+  results: [
+    // {
+    //   score: 10,
+    //   results: [{
+    //     questionId:1,
+    //     question: '1',
+    //     answers:[{
+    //       title:'白菜',
+    //       score: 1
+    //     },
+    //     {
+    //       title:'白菜',
+    //       score: 1
+    //     },
+    //     {
+    //       title:'白菜',
+    //       score: 1
+    //     }]
+    //   }, {
+    //     questionId:2,
+    //     question: '2',
+    //     answers:[{
+    //       title:'白菜',
+    //       score: 1
+    //     },
+    //     {
+    //       title:'白菜',
+    //       score: 1
+    //     },
+    //     {
+    //       title:'白菜',
+    //       score: 1
+    //     }]
+    //   },{
+    //     questionId:3,
+    //     question: '3',
+    //     answers:[{
+    //       title:'白菜',
+    //       score: 1
+    //     },
+    //     {
+    //       title:'白菜',
+    //       score: 1
+    //     },
+    //     {
+    //       title:'白菜',
+    //       score: 1
+    //     }]
+    //   }]
+    // },
+    // {
+    //   score: 10,
+    //   results: [{
+    //     questionId:1,
+    //     question: 1,
+    //     answers:[{
+    //       title:'白菜',
+    //       score: 1
+    //     },
+    //     {
+    //       title:'白菜',
+    //       score: 1
+    //     },
+    //     {
+    //       title:'白菜',
+    //       score: 1
+    //     }]
+    //   }, {
+    //     questionId:2,
+    //     question: 1,
+    //     answers:[{
+    //       title:'白菜',
+    //       score: 1
+    //     },
+    //     {
+    //       title:'白菜',
+    //       score: 1
+    //     },
+    //     {
+    //       title:'白菜',
+    //       score: 1
+    //     }]
+    //   },{
+    //     questionId:3,
+    //     question: 1,
+    //     answers:[{
+    //       title:'白菜',
+    //       score: 1
+    //     },
+    //     {
+    //       title:'白菜',
+    //       score: 1
+    //     },
+    //     {
+    //       title:'白菜',
+    //       score: 1
+    //     }]
+    //   }]
+    // }
+  ],
+  questions: questions,
+  showBack: true
 }
 
 export default new Vuex.Store({

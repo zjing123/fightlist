@@ -1,42 +1,25 @@
 <template>
   <div>
     <div >
-      <!-- <flexbox class="round-user">
-           <flexbox-item>
-             <div class="flex-round-user">
-             </div>
-           </flexbox-item>
-           <flexbox-item>
-             <div class="flex-round-user">
-              <img class="image" src="../assets/user.jpg"/>
-              <div style="clear:both;"></div>
-              <span style="margin-top:5px;">{{ state.username }}</span>
-             </div>
-           </flexbox-item>
-           <flexbox-item>
-             <div class="flex-round-user">
-             </div>
-           </flexbox-item>
-      </flexbox> -->
-      <blur :blur-amount="10" :url="userImageSrc" :height="180">
+      <blur :blur-amount="10" :url="userImageSrc" :height="180" @click.native="showResult">
       <p class="center">
         <img :src="userImageSrc">
       </p>
-      <p style="text-align:center;color:#fff;">
+      <p style="text-align:center;color:#fff;" >
         <span style="margin-top:5px;">{{ state.username }}</span>
       </p>
       </blur>
     </div>
-    <div style="text-align:center;" v-if="currentResult" v-show="gameState !== 1">
+    <div style="text-align:center;"  v-if="result">
       <div style="padding:10px 0 5px 0;margin-left:5%;height:70%;width:90%;">
         <div class="scroller-pre scroller-pre-nopadding">
-          <panel :header="currentResult.question"  :type="type" @on-img-error="onImgError"></panel>
+          <panel :header="result.question"  :type="type" @on-img-error="onImgError"></panel>
           <scroller lock-x height="-380" ref="scroller" class="answer-content-no-radius">
              <div class="box2">
-               <div  v-if="currentResult.answers.length">
+               <div  v-if="result.answers.length">
                  <x-table :cell-bordered="false">
                   <tbody>
-                    <tr v-for="answer in currentResult.answers">
+                    <tr v-for="answer in result.answers">
                       <td style="width:60%;text-align:left;padding-left:20%;">{{answer.title}}</td>
                       <td style="text-align:left;padding-left:10%;">
                         <span :class="[clasScoreNum, clasScoreNum + '-' + answer.score]">{{answer.score != 0 ? '+' : ''}}{{answer.score}}</span>
@@ -72,26 +55,20 @@
             </box>
           </div>
         </div>
-        <div style="margin-top:10px;" v-show="gameState == 2">
-          <x-button type="primary" link="/play" @click.native="questionIndexIncrement">继续游戏</x-button>
-        </div>
-        <div style="margin-top:10px;" v-show="gameState == 3">
-          <x-button type="primary" link="/" @click.native="syncData">返回首页</x-button>
+        <div style="margin-top:10px;">
+          <x-button type="primary" link="/">返回首页</x-button>
         </div>
       </div>
     </div>
-    <div class="play-button" v-show="gameState == 1">
-      <x-button type="primary" link="/play">开始游戏</x-button>
-    </div>
     <div>
       <x-dialog v-model="showAnswerBox">
-        <div v-if="currentResult">
-          <panel :header="questions[currentResult.questionId].question"  :type="type" @on-img-error="onImgError"></panel>
+        <div v-if="result">
+          <panel :header="questions[result.questionId].question"  :type="type" @on-img-error="onImgError"></panel>
           <div class="box2" style="height:200px;padding:0 0 15px;overflow:scroll;-webkit-overflow-scrolling:touch;">
-            <div  v-if="questions[currentResult.questionId].answers.length">
+            <div  v-if="questions[result.questionId].answers.length">
               <x-table :cell-bordered="false">
                <tbody>
-                 <tr v-for="i in questions[currentResult.questionId].answers">
+                 <tr v-for="i in questions[result.questionId].answers">
                    <td style="width:60%;text-align:left;padding-left:20%;">{{i}}</td>
                    <td style="text-align:left;padding-left:10%;"><span class="score-num score-num-1">+1</span></td>
                  </tr>
@@ -140,11 +117,6 @@ export default {
       showAnswerBox: false,
       clasScoreNum: 'score-num',
       userImageSrc: 'https://o3e85j0cv.qnssl.com/tulips-1083572__340.jpg',
-      images: [
-        'https://o3e85j0cv.qnssl.com/tulips-1083572__340.jpg',
-        'https://o3e85j0cv.qnssl.com/waterway-107810__340.jpg',
-        'https://o3e85j0cv.qnssl.com/hot-chocolate-1068703__340.jpg'
-      ]
     }
   },
   methods: {
@@ -154,43 +126,29 @@ export default {
       'indexIncrement',
       'indexDecrement',
       'questionIndexIncrement',
-      'setTitle',
-      'syncResult'
     ]),
     showAnswer () {
       this.showAnswerBox = true
     },
-    syncData() {
-      this.syncResult()
+    showResult() {
+      console.log(this.getResult())
     }
   },
   computed: {
     ...mapState({
-      route: state => state.route,
-      path: state => state.route.path,
       state: state => state,
+      dataId: state => state.route.params.dataId,
       questions: state => state.questions,
       question: state => state.questions,
-      time: state => state.time,
       percentage: state => state.percentage,
-      currentResults: state => state.currentResults,
-      currentResult: state => state.currentResults[state.index],
+      currentResults: state => state.results[state.route.params.dataId].results,
+      result: state => state.results[state.route.params.dataId].results[state.index],
       resultIndex: state => state.index,
     }),
-    gameState () {
-      let len = this.currentResults.length;
-      if(len == 0) {
-        return 1;
-      } else if (len < 3) {
-        return 2;
-      } {
-        return 3;
-      }
-    },
     getScore () {
       let score = 0
-      for( var i in this.currentResult.answers) {
-        score += this.currentResult.answers[i].score;
+      for( var i in this.result.answers) {
+        score += this.result.answers[i].score;
       }
       return score;
     }

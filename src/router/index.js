@@ -7,6 +7,7 @@ import Game from '@/components/Game'
 import Icon from '@/components/Icon'
 import Header from '@/components/Header'
 import Play from '@/components/Play'
+import Result from '@/components/Result'
 
 Vue.use(Router)
 
@@ -39,5 +40,9 @@ export default new Router({
     name: 'Play',
     path: '/play',
     component: Play
+  }, {
+    name: 'result',
+    path: '/result/:dataId',
+    component: Result
   }]
 })
