@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/components/Home'
-import NewGame from '@/components/Newgame'
-import Sticky from '@/components/Sticky'
-import Game from '@/components/Game'
-import Icon from '@/components/Icon'
-import Header from '@/components/Header'
-import Play from '@/components/Play'
-import Result from '@/components/Result'
+import Home from '@/pages/Home'
+import NewGame from '@/pages/Newgame'
+import Sticky from '@/pages/Sticky'
+import Game from '@/pages/Game'
+import Icon from '@/pages/Icon'
+import Header from '@/pages/Header'
+import Play from '@/pages/Play'
+import Result from '@/pages/Result'
 
 Vue.use(Router)
 

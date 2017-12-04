@@ -26,8 +26,8 @@
         </div>
         <div style="margin-top:15px;">
           <group>
-            <x-input class="weui-vcode" placeholder="答案..." :show-clear="false" :disabled="disabled" @on-enter="onEnter" ref="answerInput">
-              <x-button slot="right" type="primary" mini>确认</x-button>
+            <x-input class="weui-vcode" placeholder="答案..." v-model="value" :show-clear="false" :disabled="disabled" @on-enter="onEnter" ref="answerInput" @on-focus="onFocus">
+              <x-button slot="right" type="primary" mini @click.native="addResult">确认</x-button>
             </x-input>
           </group>
         </div>
@@ -63,7 +63,8 @@ export default {
       },
       striped: true,
       showAnswerBox: false,
-      clasScoreNum: 'score-num'
+      clasScoreNum: 'score-num',
+      value:''
     }
   },
   methods: {
@@ -71,10 +72,21 @@ export default {
     },
     onEnter (value, $event) {
       let name = value
-      let score = this.questions[this.questionId].answers.findIndex(x => x === value) !== -1 ? 1 : 0
+      let score = this.questions[this.questionId].answers.findIndex(x => x === name) !== -1 ? 1 : 0
       this.result.answers.push({title: name, score: score})
       this.$refs.answerInput.reset()
-      this.$refs.answerInput.focus()
+      //this.$refs.answerInput.focus()
+    },
+    addResult() {
+      let name = this.value
+      let score = this.questions[this.questionId].answers.findIndex(x => x === name) !== -1 ? 1 : 0
+      this.result.answers.push({title: name, score: score})
+      this.$refs.answerInput.reset()
+      //this.$refs.answerInput.focus()
+    },
+    onFocus(val, $event) {
+      // console.log('on focus', this.$refs.scroller.height)
+      //this.$refs.scroller.height -= 500
     },
     ...mapMutations([
       'pushCurrentResult',
@@ -99,7 +111,7 @@ export default {
   mounted () {
     this.$nextTick(() => {
       this.$refs.scroller.reset({top: 0})
-      this.$refs.answerInput.focus()
+      //this.$refs.answerInput.focus()
     })
   },
   watch: {
