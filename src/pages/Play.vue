@@ -73,9 +73,10 @@ export default {
     },
     onEnter (value, $event) {
       let name = value
-      if(name !== null || name !== undefined || name !== '') {
+      if(name !== null && name !== undefined && name !== '') {
         let score = this.questions[this.questionId].answers.findIndex(x => x === name) !== -1 ? 1 : 0
         this.result.answers.unshift({title: name, score: score})
+        this.scrollHeight = '-250';
         this.$refs.answerInput.reset()
       } else {
         this.$refs.answerInput.focus()
@@ -85,9 +86,11 @@ export default {
     },
     addResult() {
       let name = this.value
-      if(name !== null || name !== undefined || name !== '') {
+      console.log(name !== '')
+      if(name !== null && name !== undefined && name !== '') {
         let score = this.questions[this.questionId].answers.findIndex(x => x === name) !== -1 ? 1 : 0
         this.result.answers.unshift({title: name, score: score})
+        this.scrollHeight = '-250';
         this.$refs.answerInput.reset()
       } else {
         this.$refs.answerInput.focus()
@@ -96,10 +99,10 @@ export default {
     },
     onFocus(value, $event) {
       this.scrollHeight = '80px';
+      document.body.scrollTop = 0;
     },
     onBlur(value, $event) {
       this.scrollHeight = '-250';
-      console.log(this.scrollHeight)
     },
     ...mapMutations([
       'pushCurrentResult',
