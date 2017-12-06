@@ -7,7 +7,7 @@
         </div>
         <panel :header="questions[questionId].question"  :type="panelType" @on-img-error="onImgError"></panel>
         <div class="scroller-pre">
-          <scroller lock-x height="-250" ref="scroller" class="answer-content">
+          <scroller lock-x :height="scrollHeight" ref="scroller" class="answer-content">
              <div class="box2">
                <div  v-if="result.answers.length">
                  <x-table :cell-bordered="false">
@@ -26,7 +26,7 @@
         </div>
         <div style="margin-top:15px;">
           <group>
-            <x-input class="weui-vcode" placeholder="答案..." v-model="value" :show-clear="false" :disabled="disabled" @on-enter="onEnter" ref="answerInput" @on-focus="onFocus">
+            <x-input class="weui-vcode" placeholder="答案..." v-model="value" :show-clear="false" :disabled="disabled" @on-enter="onEnter" ref="answerInput" @on-focus="onFocus" @on-blur="onBlur">
               <x-button slot="right" type="primary" mini @click.native="addResult">确认</x-button>
             </x-input>
           </group>
@@ -64,7 +64,8 @@ export default {
       striped: true,
       showAnswerBox: false,
       clasScoreNum: 'score-num',
-      value:''
+      value:'',
+      scrollHeight: '-250'
     }
   },
   methods: {
@@ -72,21 +73,33 @@ export default {
     },
     onEnter (value, $event) {
       let name = value
-      let score = this.questions[this.questionId].answers.findIndex(x => x === name) !== -1 ? 1 : 0
-      this.result.answers.push({title: name, score: score})
-      this.$refs.answerInput.reset()
+      if(name !== null || name !== undefined || name !== '') {
+        let score = this.questions[this.questionId].answers.findIndex(x => x === name) !== -1 ? 1 : 0
+        this.result.answers.unshift({title: name, score: score})
+        this.$refs.answerInput.reset()
+      } else {
+        this.$refs.answerInput.focus()
+      }
+
       //this.$refs.answerInput.focus()
     },
     addResult() {
       let name = this.value
-      let score = this.questions[this.questionId].answers.findIndex(x => x === name) !== -1 ? 1 : 0
-      this.result.answers.push({title: name, score: score})
-      this.$refs.answerInput.reset()
+      if(name !== null || name !== undefined || name !== '') {
+        let score = this.questions[this.questionId].answers.findIndex(x => x === name) !== -1 ? 1 : 0
+        this.result.answers.unshift({title: name, score: score})
+        this.$refs.answerInput.reset()
+      } else {
+        this.$refs.answerInput.focus()
+      }
       //this.$refs.answerInput.focus()
     },
-    onFocus(val, $event) {
-      // console.log('on focus', this.$refs.scroller.height)
-      //this.$refs.scroller.height -= 500
+    onFocus(value, $event) {
+      this.scrollHeight = '80px';
+    },
+    onBlur(value, $event) {
+      this.scrollHeight = '-250';
+      console.log(this.scrollHeight)
     },
     ...mapMutations([
       'pushCurrentResult',
