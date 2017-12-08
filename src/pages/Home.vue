@@ -24,6 +24,8 @@
 <script>
 import { Tabbar, TabbarItem, Group, Cell, Box, XButton } from 'vux'
 import { mapState } from 'vuex'
+import config from '@/config/base.config'
+
 export default {
   components: {
     Tabbar,
@@ -52,6 +54,13 @@ export default {
       submit001: 'click me',
       disable001: false
     }
+  },
+  created () {
+    this.$http.get("/api/questions").then((response) => {
+      this.$store.commit('setQuestions', response.data)
+    }).catch(err => {
+      console.log(err)
+    })
   }
 }
 </script>

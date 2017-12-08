@@ -17,6 +17,12 @@ export const questionIndexIncrement = state => {
   }
 }
 
+export const setQuestions = (state, questions) => {
+  if(questions && questions.length > 0) {
+    state.questions = questions
+  }
+}
+
 export const setTitle = (state, title) => {
   state.title = title
 }

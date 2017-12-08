@@ -5,6 +5,7 @@ import FastClick from 'fastclick'
 import VueRouter from 'vue-router'
 import App from './App'
 import Vuex from 'vuex'
+import { AjaxPlugin } from 'vux'
 import { sync } from 'vuex-router-sync'
 import store from './store'
 import router from './router'
@@ -18,6 +19,7 @@ Vue.use(VueInstant)
 
 Vue.use(VueRouter)
 Vue.use(Vuex)
+Vue.use(AjaxPlugin)
 
 sync(store, router)
 

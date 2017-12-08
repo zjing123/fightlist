@@ -26,7 +26,7 @@
         </div>
         <div style="margin-top:15px;">
           <group>
-            <x-input class="weui-vcode" placeholder="答案..." v-model="value" :show-clear="false" :disabled="disabled" @on-enter="onEnter" ref="answerInput" @on-focus="onFocus" @on-blur="onBlur">
+            <x-input class="weui-vcode" placeholder="答案..." autofocus="autofocus" v-model="value" :show-clear="false" :disabled="disabled" @on-enter="onEnter" ref="answerInput" @on-focus="onFocus" @on-blur="onBlur" v-focus>
               <x-button slot="right" type="primary" mini @click.native="addResult">确认</x-button>
             </x-input>
           </group>
@@ -52,6 +52,14 @@ export default {
     Box,
     VmProgress,
   },
+  directives: {
+    focus: {
+      inserted (el, binding) {
+        el.focus()
+      }
+    }
+  }
+  ,
   data () {
     return {
       gameStart: 1,
@@ -127,7 +135,7 @@ export default {
   mounted () {
     this.$nextTick(() => {
       this.$refs.scroller.reset({top: 0})
-      //this.$refs.answerInput.focus()
+      console.log(this.$refs.answerInput.html)
     })
   },
   watch: {
