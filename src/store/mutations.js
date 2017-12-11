@@ -17,10 +17,15 @@ export const questionIndexIncrement = state => {
   }
 }
 
-export const setQuestions = (state, questions) => {
-  if(questions && questions.length > 0) {
-    state.questions = questions
+export const setQuestions = (state, data) => {
+  if(data) {
+    state.questions = data.questions
+    state.questionGroup = data.group
   }
+}
+
+export const setFightId = (state, fightId) => {
+  state.fight_id = fightId
 }
 
 export const setTitle = (state, title) => {

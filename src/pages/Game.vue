@@ -198,6 +198,21 @@ export default {
   mounted() {
     this.$nextTick(()=>{
     })
+  },
+  created () {
+    let params = {
+      type: 1,//单人游戏
+      group_id: 1
+    }
+    this.$http.post("api/fights", params).then((response) => {
+      if (response.data.status == 'success') {
+        this.$store.commit('setFightId', response.data.data.fight_id)
+      } else {
+        this.$vux.toast.text(response.data.message, 'middle')
+      }
+    }).catch(err => {
+      this.$vux.toast.text('数据获取失败', 'middle')
+    })
   }
 }
 </script>

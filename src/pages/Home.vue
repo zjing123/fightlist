@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { Tabbar, TabbarItem, Group, Cell, Box, XButton } from 'vux'
+import { Tabbar, TabbarItem, Group, Cell, Box, XButton, Toast } from 'vux'
 import { mapState } from 'vuex'
 import config from '@/config/base.config'
 
@@ -57,9 +57,13 @@ export default {
   },
   created () {
     this.$http.get("/api/questions").then((response) => {
-      this.$store.commit('setQuestions', response.data)
+      if(response.data.status == 'success') {
+        this.$store.commit('setQuestions', response.data.data)
+      } else {
+        this.$vux.toast.text(response.data.data.message, 'middle')
+      }
     }).catch(err => {
-      console.log(err)
+      this.$vux.toast.text('数据获取失败', 'middle')
     })
   }
 }

@@ -94,7 +94,6 @@ export default {
     },
     addResult() {
       let name = this.value
-      console.log(name !== '')
       if(name !== null && name !== undefined && name !== '') {
         let score = this.questions[this.questionId].answers.findIndex(x => x === name) !== -1 ? 1 : 0
         this.result.answers.unshift({title: name, score: score})
@@ -126,7 +125,8 @@ export default {
       question: state => state.questions,
       questionId: state => state.questionIndex,
       time: state => state.time,
-      percentage: state => state.percentage
+      percentage: state => state.percentage,
+      fight_id: state => state.fight_id
     }),
     disabled () {
       return this.time <= 0
@@ -145,6 +145,23 @@ export default {
         this.result.question = this.questions[this.questionId].question
         this.pushCurrentResult(this.result)
         this.setQuestionIndexToIndex()
+        let params = {
+          fight_id: this.fight_id,
+          questionId: this.questionId,
+          answers: this.result.answers,
+          finished: 1
+        }
+
+        this.$http.post("api/fightrecords", params).then((response) => {
+          if (response.data.status == 'success') {
+
+          } else {
+            this.$vux.toast.text(response.data.message, 'middle')
+          }
+        }).catch(err => {
+          this.$vux.toast.text('数据获取失败', 'middle')
+        })
+
         this.$router.go(-1)
       }
     }

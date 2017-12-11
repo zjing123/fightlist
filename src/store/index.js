@@ -137,6 +137,8 @@ const state = {
     // }
   ],
   questions: questions,
+  questionGroup:null,
+  fight_id:null,
   showBack: true
 }
 
