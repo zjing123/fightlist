@@ -3,16 +3,16 @@
     <box gap="10px 10px">
        <x-button type="primary" link="/newgame">新游戏</x-button>
     </box>
-    <div style="margin-top:30px;" v-if="results.length">
+    <div style="margin-top:30px;" v-if="fights">
       <group title="<span class='title'>游戏记录</span>" class="game-info">
-        <cell is-link v-for="(result, index) in results" :link="{name: 'result', params:{dataId: index}}">
+        <cell is-link v-for="(fight, index) in fights" :link="{name: 'result', params:{dataId: fight.id}}">
           <div slot="title">
             <div class="circular--landscape" >
               <img src="../assets/user.jpg"/>
             </div>
             <div class="game-info-desc">
-              <p class="title">Guest</p>
-              <p class="desc">得分：<span>{{ result.score }}</span></p>
+              <p class="title">{{ fight.user.name }}</p>
+              <p class="desc">得分：<span>{{ fight.score }}</span></p>
             </div>
           </div>
         </cell>
@@ -46,19 +46,33 @@ export default {
   },
   computed: {
     ...mapState({
-      results: state => state.results
+      //results: state => state.results
     }),
   },
   data () {
     return {
       submit001: 'click me',
-      disable001: false
+      disable001: false,
+      fights: null,
+      fightings: null
     }
   },
   created () {
     this.$http.get("/api/questions").then((response) => {
       if(response.data.status == 'success') {
         this.$store.commit('setQuestions', response.data.data)
+      } else {
+        this.$vux.toast.text(response.data.data.message, 'middle')
+      }
+    }).catch(err => {
+      this.$vux.toast.text('数据获取失败', 'middle')
+    })
+
+    let that = this
+    this.$http.get("/api/fights").then((response) => {
+      if(response.data.status == 'success') {
+        that.fights = response.data.data.fights
+        that.fightings = response.data.data.fightings
       } else {
         this.$vux.toast.text(response.data.data.message, 'middle')
       }

@@ -25,7 +25,9 @@ export const setQuestions = (state, data) => {
 }
 
 export const setFightId = (state, fightId) => {
-  state.fight_id = fightId
+  if(!state.fight_id) {
+      state.fight_id = fightId
+  }
 }
 
 export const setTitle = (state, title) => {
@@ -42,6 +44,8 @@ export const start = state => {
 export const initParams = state => {
   state.time = 30
   state.percentage = 100
+  state.fight_id = null
+  state.questionGroup = null
 }
 
 export const pushCurrentResult = (state, result) => {

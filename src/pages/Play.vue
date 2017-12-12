@@ -147,7 +147,7 @@ export default {
         this.setQuestionIndexToIndex()
         let params = {
           fight_id: this.fight_id,
-          questionId: this.questionId,
+          question_id: this.questionId,
           answers: this.result.answers,
           finished: 1
         }
