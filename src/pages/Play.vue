@@ -5,7 +5,7 @@
         <div>
         <vm-progress :percentage="percentage" :text-inside="true" :stroke-width="18" :striped="striped">{{time}}<b>s</b></vm-progress>
         </div>
-        <panel :header="questions[questionId].question"  :type="panelType" @on-img-error="onImgError"></panel>
+        <panel :header="question.title"  :type="panelType" @on-img-error="onImgError"></panel>
         <div class="scroller-pre">
           <scroller lock-x :height="scrollHeight" ref="scroller" class="answer-content">
              <div class="box2">
@@ -26,7 +26,7 @@
         </div>
         <div style="margin-top:15px;">
           <group>
-            <x-input class="weui-vcode" placeholder="答案..." autofocus="autofocus" v-model="value" :show-clear="false" :disabled="disabled" @on-enter="onEnter" ref="answerInput" @on-focus="onFocus" @on-blur="onBlur" v-focus>
+            <x-input class="weui-vcode" placeholder="答案..." autofocus="autofocus" v-model="value" :show-clear="false" :disabled="disabled" @on-enter="onEnter" ref="answerInput" @on-focus="onFocus" @on-blur="onBlur">
               <x-button slot="right" type="primary" mini @click.native="addResult">确认</x-button>
             </x-input>
           </group>
@@ -38,7 +38,7 @@
 
 <script>
 import { XButton, Group, Panel, Scroller, XInput, XTable, Box  } from 'vux'
-import { mapState, mapActions, mapMutations} from 'vuex'
+import { mapState, mapActions, mapMutations, mapGetters } from 'vuex'
 import VmProgress from 'vue-multiple-progress'
 
 export default {
@@ -52,14 +52,6 @@ export default {
     Box,
     VmProgress,
   },
-  directives: {
-    focus: {
-      inserted (el, binding) {
-        el.focus()
-      }
-    }
-  }
-  ,
   data () {
     return {
       gameStart: 1,
@@ -82,7 +74,7 @@ export default {
     onEnter (value, $event) {
       let name = value
       if(name !== null && name !== undefined && name !== '') {
-        let score = this.questions[this.questionId].answers.findIndex(x => x === name) !== -1 ? 1 : 0
+        let score = this.question.answers.findIndex(x => x === name) !== -1 ? 1 : 0
         this.result.answers.unshift({title: name, score: score})
         this.scrollHeight = '-250';
         this.$refs.answerInput.reset()
@@ -95,14 +87,13 @@ export default {
     addResult() {
       let name = this.value
       if(name !== null && name !== undefined && name !== '') {
-        let score = this.questions[this.questionId].answers.findIndex(x => x === name) !== -1 ? 1 : 0
+        let score = this.question.answers.findIndex(x => x === name) !== -1 ? 1 : 0
         this.result.answers.unshift({title: name, score: score})
         this.scrollHeight = '-250';
         this.$refs.answerInput.reset()
       } else {
         this.$refs.answerInput.focus()
       }
-      //this.$refs.answerInput.focus()
     },
     onFocus(value, $event) {
       this.scrollHeight = '80px';
@@ -113,7 +104,8 @@ export default {
     },
     ...mapMutations([
       'pushCurrentResult',
-      'setQuestionIndexToIndex'
+      'setQuestionIndexToIndex',
+      'pushUsedIndex'
     ])
   },
   computed: {
@@ -121,12 +113,13 @@ export default {
       route: state => state.route,
       path: state => state.route.path,
       state: state => state,
-      questions: state => state.questions,
-      question: state => state.questions,
-      questionId: state => state.questionIndex,
       time: state => state.time,
       percentage: state => state.percentage,
       fight_id: state => state.fight_id
+    }),
+    ...mapGetters({
+      question: 'getQuestion',
+      getQuestionByid: 'getQuestionById'
     }),
     disabled () {
       return this.time <= 0
@@ -135,32 +128,32 @@ export default {
   mounted () {
     this.$nextTick(() => {
       this.$refs.scroller.reset({top: 0})
-      console.log(this.$refs.answerInput.html)
     })
   },
   watch: {
     '$store.state.time': function () {
       if (this.time <= 0) {
-        this.result.questionId = this.questionId
-        this.result.question = this.questions[this.questionId].question
+        this.result.questionId = this.question.questionId
+        this.result.title = this.question.title
         this.pushCurrentResult(this.result)
+        this.pushUsedIndex(this.question.questionId)
         this.setQuestionIndexToIndex()
-        let params = {
-          fight_id: this.fight_id,
-          question_id: this.questionId,
-          answers: this.result.answers,
-          finished: 1
-        }
-
-        this.$http.post("api/fightrecords", params).then((response) => {
-          if (response.data.status == 'success') {
-
-          } else {
-            this.$vux.toast.text(response.data.message, 'middle')
-          }
-        }).catch(err => {
-          this.$vux.toast.text('数据获取失败', 'middle')
-        })
+        // let params = {
+        //   fight_id: this.fight_id,
+        //   question_id: this.questionId,
+        //   answers: this.result.answers,
+        //   finished: 1
+        // }
+        //
+        // this.$http.post("api/fightrecords", params).then((response) => {
+        //   if (response.data.status == 'success') {
+        //
+        //   } else {
+        //     this.$vux.toast.text(response.data.message, 'middle')
+        //   }
+        // }).catch(err => {
+        //   this.$vux.toast.text('数据获取失败', 'middle')
+        // })
 
         this.$router.go(-1)
       }

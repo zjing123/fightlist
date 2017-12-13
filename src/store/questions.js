@@ -1,7 +1,7 @@
-export const questions = {
-  1: {
+export const questions = [
+  {
     questionId:1,
-    question: '写出能想到的蔬菜的名称',
+    title: '写出能想到的蔬菜的名称',
     answers: [
       '白菜',
       '萝卜',
@@ -19,9 +19,9 @@ export const questions = {
       '韭菜'
     ]
   },
-  2: {
+  {
     questionId:2,
-    question: '写出能想到的水果的名称',
+    title: '写出能想到的水果的名称',
     answers:[
       '苹果',
       '香蕉',
@@ -50,9 +50,9 @@ export const questions = {
       '水蜜桃'
     ]
   },
-  3: {
+  {
     questionId:3,
-    question: '写出常见的动物的名称',
+    title: '写出常见的动物的名称',
     answers:[
       '虎',
       '狼',
@@ -100,4 +100,4 @@ export const questions = {
       '鼬'
     ]
   }
-}
+]

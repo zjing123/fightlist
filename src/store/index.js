@@ -8,34 +8,13 @@ import { questions } from './questions'
 Vue.use(Vuex)
 const state = {
   username: 'Guest',
-  time: 30,/*30s*/
+  time: 10,/*30s*/
   percentage: 100,
-  speed: 100 / 30,
+  speed: 100 / 10,
   title: '',
   index: 0,
-  questionIndex: 1,
-  currentResults:[
-    /*
-    {
-      questionId:1,
-      question: '1',
-      answers: [
-        {
-          title:'白菜',
-          score: 1
-        },
-        {
-          title:'白菜',
-          score: 1
-        },
-        {
-          title:'白菜',
-          score: 1
-        }
-      ]
-    }
-     */
-  ],
+  usedIndexes:[], /**回答过的问题id*/
+  currentResults:[],
   results: [
     // {
     //   score: 10,

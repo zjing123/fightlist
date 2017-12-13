@@ -23,7 +23,7 @@
 
 <script>
 import { Tabbar, TabbarItem, Group, Cell, Box, XButton, Toast } from 'vux'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import config from '@/config/base.config'
 
 export default {
@@ -48,6 +48,9 @@ export default {
     ...mapState({
       //results: state => state.results
     }),
+    ...mapGetters([
+      'getQuestion'
+    ])
   },
   data () {
     return {
@@ -79,6 +82,8 @@ export default {
     }).catch(err => {
       this.$vux.toast.text('数据获取失败', 'middle')
     })
+
+    console.log(this.getQuestion)
   }
 }
 </script>

@@ -1,23 +1,6 @@
 <template>
   <div>
     <div >
-      <!-- <flexbox class="round-user">
-           <flexbox-item>
-             <div class="flex-round-user">
-             </div>
-           </flexbox-item>
-           <flexbox-item>
-             <div class="flex-round-user">
-              <img class="image" src="../assets/user.jpg"/>
-              <div style="clear:both;"></div>
-              <span style="margin-top:5px;">{{ state.username }}</span>
-             </div>
-           </flexbox-item>
-           <flexbox-item>
-             <div class="flex-round-user">
-             </div>
-           </flexbox-item>
-      </flexbox> -->
       <blur :blur-amount="10" :url="userImageSrc" :height="180">
       <p class="center">
         <img :src="userImageSrc">
@@ -27,16 +10,16 @@
       </p>
       </blur>
     </div>
-    <div style="text-align:center;" v-if="currentResult" v-show="gameState !== 1">
+    <div style="text-align:center;" v-if="currentResult.result" v-show="gameState !== 1">
       <div style="padding:10px 0 5px 0;margin-left:5%;height:70%;width:90%;">
         <div class="scroller-pre scroller-pre-nopadding">
-          <panel :header="currentResult.question"  :type="type" @on-img-error="onImgError"></panel>
+          <panel :header="currentResult.result.title"  :type="type" @on-img-error="onImgError"></panel>
           <scroller lock-x height="-380" ref="scroller" class="answer-content-no-radius">
              <div class="box2">
-               <div  v-if="currentResult.answers.length">
+               <div  v-if="currentResult.result.answers.length">
                  <x-table :cell-bordered="false">
                   <tbody>
-                    <tr v-for="answer in currentResult.answers">
+                    <tr v-for="answer in currentResult.result.answers">
                       <td style="width:60%;text-align:left;padding-left:20%;">{{answer.title}}</td>
                       <td style="text-align:left;padding-left:10%;">
                         <span :class="[clasScoreNum, clasScoreNum + '-' + answer.score]">{{answer.score != 0 ? '+' : ''}}{{answer.score}}</span>
@@ -50,8 +33,8 @@
           <div style="background:#f8f8f8;height:40px;">
             <flexbox>
               <flexbox-item>
-                <div class="flex-demo prev-game" v-show="resultIndex != 0">
-                  <a href="javascript:void(0);" @click.navite="indexDecrement">上一个</a>
+                <div class="flex-demo prev-game" v-show="!currentResult.isFirst">
+                  <a href="javascript:void(0);" @click.navite="getPrevResult">上一个</a>
                 </div>
             </flexbox-item>
               <flexbox-item>
@@ -60,8 +43,8 @@
                 </div>
                 </flexbox-item>
               <flexbox-item>
-                <div class="flex-demo next-game" v-show="resultIndex != currentResults.length - 1">
-                  <a href="javascript:void(0);" @click.navite="indexIncrement(currentResults.length - 1)">下一个</a>
+                <div class="flex-demo next-game" v-show="!currentResult.isLast">
+                  <a href="javascript:void(0);" @click.navite="getNextResult">下一个</a>
                 </div>
             </flexbox-item>
             </flexbox>
@@ -85,13 +68,13 @@
     </div>
     <div>
       <x-dialog v-model="showAnswerBox">
-        <div v-if="currentResult">
-          <panel :header="questions[currentResult.questionId].question"  :type="type" @on-img-error="onImgError"></panel>
+        <div v-if="currentResult.result">
+          <panel :header="questions[currentResult.result.questionId].question"  :type="type" @on-img-error="onImgError"></panel>
           <div class="box2" style="height:200px;padding:0 0 15px;overflow:scroll;-webkit-overflow-scrolling:touch;">
-            <div  v-if="questions[currentResult.questionId].answers.length">
+            <div  v-if="questions[currentResult.result.questionId].answers.length">
               <x-table :cell-bordered="false">
                <tbody>
-                 <tr v-for="i in questions[currentResult.questionId].answers">
+                 <tr v-for="i in questions[currentResult.result.questionId].answers">
                    <td style="width:60%;text-align:left;padding-left:20%;">{{i}}</td>
                    <td style="text-align:left;padding-left:10%;"><span class="score-num score-num-1">+1</span></td>
                  </tr>
@@ -139,6 +122,7 @@ export default {
       striped: true,
       showAnswerBox: false,
       clasScoreNum: 'score-num',
+      currentResult:null,
       userImageSrc: 'https://o3e85j0cv.qnssl.com/tulips-1083572__340.jpg',
       images: [
         'https://o3e85j0cv.qnssl.com/tulips-1083572__340.jpg',
@@ -162,6 +146,14 @@ export default {
     },
     syncData() {
       this.syncResult()
+    },
+    getNextResult () {
+      let result = this.getNextCurrentResult(this.currentResult.result.questionId)
+      this.currentResult = result
+    },
+    getPrevResult() {
+      let result = this.getPrevCurrentResult(this.currentResult.result.questionId)
+      this.currentResult = result
     }
   },
   computed: {
@@ -173,10 +165,13 @@ export default {
       question: state => state.questions,
       time: state => state.time,
       percentage: state => state.percentage,
-      currentResults: state => state.currentResults,
-      currentResult: state => state.currentResults[state.index],
-      resultIndex: state => state.index,
+      currentResults: state => state.currentResults
     }),
+    ...mapGetters([
+      'getLastCurrentResult',
+      'getNextCurrentResult',
+      'getPrevCurrentResult'
+    ]),
     gameState () {
       let len = this.currentResults.length;
       if(len == 0) {
@@ -189,8 +184,8 @@ export default {
     },
     getScore () {
       let score = 0
-      for( var i in this.currentResult.answers) {
-        score += this.currentResult.answers[i].score;
+      for( var i in this.currentResult.result.answers) {
+        score += this.currentResult.result.answers[i].score;
       }
       return score;
     }
@@ -200,6 +195,8 @@ export default {
     })
   },
   created () {
+    this.currentResult = this.getLastCurrentResult
+
     let params = {
       type: 1,//单人游戏
       group_id: 1

@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 export const indexIncrement = (state, length) => {
   if(state.index < length) {
     state.index++
@@ -42,10 +44,10 @@ export const start = state => {
 }
 
 export const initParams = state => {
-  state.time = 30
+  state.time = 10
   state.percentage = 100
-  state.fight_id = null
-  state.questionGroup = null
+  // state.fight_id = null
+  // state.questionGroup = null
 }
 
 export const pushCurrentResult = (state, result) => {
@@ -69,6 +71,16 @@ export const syncResult = state => {
 
 export const setQuestionIndexToIndex = state => {
   state.index = state.questionIndex - 1
+}
+
+/**
+ * [pushUsedIndex 将已经回答过的问题的id记录下来]
+ * @param  {[type]} state [description]
+ * @param  {[type]} index [description]
+ * @return {[type]}       [description]
+ */
+export const pushUsedIndex = (state, id) => {
+  _.uniq(state.usedIndexes.push(id))
 }
 
 export const disableShowBack = state => {
