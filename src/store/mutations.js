@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import config from '@/config/base.config'
 
 export const updateLoadingStatus = (state, payload) => {
   state.isLoading = payload.isLoading
@@ -34,10 +35,14 @@ export const setQuestions = (state, data) => {
   }
 }
 
-export const setFightId = (state, fightId) => {
+export const setFightId = (state, data) => {
   if(!state.fight_id) {
-      state.fight_id = fightId
+      state.fight_id = data.fight_id
   }
+}
+
+export const setComplete = (state, payload) => {
+  state.completed = payload.completed
 }
 
 export const setTitle = (state, title) => {
@@ -52,8 +57,8 @@ export const start = state => {
 }
 
 export const initParams = state => {
-  state.time = 60
-  state.percentage = 100
+  state.time = config.time
+  state.percentage = config.percentage
   // state.fight_id = null
   // state.questionGroup = null
 }

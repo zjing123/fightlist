@@ -61,16 +61,6 @@ export default {
     }
   },
   created () {
-    this.$http.get("/api/questions").then((response) => {
-      if(response.data.status == 'success') {
-        this.$store.commit('setQuestions', response.data.data)
-      } else {
-        this.$vux.toast.text(response.data.data.message, 'middle')
-      }
-    }).catch(err => {
-      //this.$vux.toast.text('数据获取失败', 'middle')
-    })
-
     let that = this
     this.$http.get("/api/fights").then((response) => {
       if(response.data.status == 'success') {

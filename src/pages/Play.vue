@@ -133,29 +133,29 @@ export default {
   watch: {
     '$store.state.time': function () {
       if (this.time <= 0) {
-        this.result.questionId = this.question.questionId
+        let questionId = this.question.questionId
+        this.result.questionId = questionId
         this.result.title = this.question.title
         this.pushCurrentResult(this.result)
-        this.pushUsedIndex(this.question.questionId)
-        this.setQuestionIndexToIndex()
-        // let params = {
-        //   fight_id: this.fight_id,
-        //   question_id: this.questionId,
-        //   answers: this.result.answers,
-        //   finished: 1
-        // }
-        //
-        // this.$http.post("api/fightrecords", params).then((response) => {
-        //   if (response.data.status == 'success') {
-        //
-        //   } else {
-        //     this.$vux.toast.text(response.data.message, 'middle')
-        //   }
-        // }).catch(err => {
-        //   this.$vux.toast.text('数据获取失败', 'middle')
-        // })
+        this.pushUsedIndex(questionId)
+        let params = {
+          fight_id: this.fight_id,
+          question_id: questionId,
+          answers: this.result.answers,
+          finished: 1
+        }
 
-        this.$router.go(-1)
+        this.$http.post("api/fightrecords", params).then((response) => {
+          if (response.data.status == 'success') {
+
+          } else {
+            this.$vux.toast.text(response.data.message, 'middle')
+          }
+        }).catch(err => {
+          this.$vux.toast.text('数据获取失败', 'middle')
+        })
+
+        this.$router.push({name: 'Playresult'})
       }
     }
   }
