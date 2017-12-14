@@ -52,7 +52,7 @@ export const start = state => {
 }
 
 export const initParams = state => {
-  state.time = 10
+  state.time = 60
   state.percentage = 100
   // state.fight_id = null
   // state.questionGroup = null

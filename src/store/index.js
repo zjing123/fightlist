@@ -8,9 +8,9 @@ import { questions } from './questions'
 Vue.use(Vuex)
 const state = {
   username: 'Guest',
-  time: 10,/*30s*/
+  time: 60,/*30s*/
   percentage: 100,
-  speed: 100 / 10,
+  speed: 100 / 60,
   title: '',
   index: 0,
   usedIndexes:[], /**回答过的问题id*/
