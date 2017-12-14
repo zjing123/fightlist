@@ -118,7 +118,9 @@ const state = {
   questions: questions,
   questionGroup:null,
   fight_id:null,
-  showBack: true
+  showBack: true,
+  isLoading: false,
+  direction: 'forward'
 }
 
 export default new Vuex.Store({

@@ -11,12 +11,12 @@ export const percentage = state => {
 export const getQuestion = state => {
 
   return state.questions.find(function(question) {
-    return _.indexOf(state.usedIndexes, question.questionId)
+    return _.indexOf(state.usedIndexes, question.questionId) === -1
   })
 }
 
 export const getQuestionById = state => (id) => {
-  return state.question.find(question => question.questionId === id)
+  return state.questions.find(question => question.questionId === id)
 }
 
 export const getFirstCurrentResult = state => {

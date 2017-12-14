@@ -58,7 +58,7 @@ export default {
       panelType: '4',
       result: {
         questionId: null,
-        question: null,
+        title: null,
         answers: []
       },
       striped: true,

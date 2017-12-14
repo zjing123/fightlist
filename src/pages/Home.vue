@@ -68,7 +68,7 @@ export default {
         this.$vux.toast.text(response.data.data.message, 'middle')
       }
     }).catch(err => {
-      this.$vux.toast.text('数据获取失败', 'middle')
+      //this.$vux.toast.text('数据获取失败', 'middle')
     })
 
     let that = this
@@ -80,10 +80,8 @@ export default {
         this.$vux.toast.text(response.data.data.message, 'middle')
       }
     }).catch(err => {
-      this.$vux.toast.text('数据获取失败', 'middle')
+      //this.$vux.toast.text('数据获取失败', 'middle')
     })
-
-    console.log(this.getQuestion)
   }
 }
 </script>

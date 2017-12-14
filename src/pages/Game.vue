@@ -69,12 +69,12 @@
     <div>
       <x-dialog v-model="showAnswerBox">
         <div v-if="currentResult.result">
-          <panel :header="questions[currentResult.result.questionId].question"  :type="type" @on-img-error="onImgError"></panel>
+          <panel :header="question.title"  :type="type" @on-img-error="onImgError"></panel>
           <div class="box2" style="height:200px;padding:0 0 15px;overflow:scroll;-webkit-overflow-scrolling:touch;">
-            <div  v-if="questions[currentResult.result.questionId].answers.length">
+            <div  v-if="question.answers.length">
               <x-table :cell-bordered="false">
                <tbody>
-                 <tr v-for="i in questions[currentResult.result.questionId].answers">
+                 <tr v-for="i in question.answers">
                    <td style="width:60%;text-align:left;padding-left:20%;">{{i}}</td>
                    <td style="text-align:left;padding-left:10%;"><span class="score-num score-num-1">+1</span></td>
                  </tr>
@@ -151,7 +151,7 @@ export default {
       let result = this.getNextCurrentResult(this.currentResult.result.questionId)
       this.currentResult = result
     },
-    getPrevResult() {
+    getPrevResult () {
       let result = this.getPrevCurrentResult(this.currentResult.result.questionId)
       this.currentResult = result
     }
@@ -162,7 +162,6 @@ export default {
       path: state => state.route.path,
       state: state => state,
       questions: state => state.questions,
-      question: state => state.questions,
       time: state => state.time,
       percentage: state => state.percentage,
       currentResults: state => state.currentResults
@@ -170,7 +169,8 @@ export default {
     ...mapGetters([
       'getLastCurrentResult',
       'getNextCurrentResult',
-      'getPrevCurrentResult'
+      'getPrevCurrentResult',
+      'getQuestionById'
     ]),
     gameState () {
       let len = this.currentResults.length;
@@ -188,6 +188,9 @@ export default {
         score += this.currentResult.result.answers[i].score;
       }
       return score;
+    },
+    question () {
+      return this.getQuestionById(this.currentResult.result.questionId)
     }
   },
   mounted() {
@@ -208,7 +211,7 @@ export default {
         this.$vux.toast.text(response.data.message, 'middle')
       }
     }).catch(err => {
-      this.$vux.toast.text('数据获取失败', 'middle')
+      //this.$vux.toast.text('数据获取失败', 'middle')
     })
   }
 }

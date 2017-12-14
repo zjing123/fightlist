@@ -1,5 +1,13 @@
 import _ from 'lodash'
 
+export const updateLoadingStatus = (state, payload) => {
+  state.isLoading = payload.isLoading
+}
+
+export const updateDirection = (state, payload) => {
+  state.direction = payload.direction
+}
+
 export const indexIncrement = (state, length) => {
   if(state.index < length) {
     state.index++

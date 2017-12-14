@@ -1,8 +1,16 @@
 <template>
   <div style="height:100%;">
     <view-box ref="viewBox" body-padding-top="46px" body-padding-bottom="55px">
-      <x-header slot="header" :title="title" class="header" :left-options="{showBack: showBack}"></x-header>
-      <router-view class="router-view" style="height:100%;"></router-view>
+
+      <x-header slot="header" :title="title" class="header" :transition="headerTransition" :left-options="{showBack: showBack}"></x-header>
+
+      <transition
+      :name="viewTransition" :css="!!direction"
+      >
+        <router-view class="router-view" style="height:100%;"></router-view>
+      </transition>
+
+
       <tabbar slot="bottom" v-show="path === '/'">
             <tabbar-item  v-for="(tabbar, index) in tabbars" v-if="tabbar.show" :selected="tabbar.selected" :link="tabbar.link" :key="index">
               <img slot="icon" :src="tabbar.icon">
@@ -33,8 +41,17 @@ export default {
       path: state => state.route.path,
       state: state => state,
       title: state => state.title,
-      showBack: state => state.showBack
-    })
+      showBack: state => state.showBack,
+      direction: state => state.direction
+    }),
+    headerTransition () {
+      if (!this.direction) return ''
+      return this.direction === 'forward' ? 'vux-header-fade-in-right' : 'vux-header-fade-in-left'
+    },
+    viewTransition () {
+      if (!this.direction) return ''
+      return 'vux-pop-' + (this.direction === 'forward' ? 'in' : 'out')
+    }
   },
   methods: {
   },
@@ -75,5 +92,34 @@ body {
 .router-view {
   width: 100%;
   top: 46px;
+}
+
+.vux-pop-out-enter-active,
+.vux-pop-out-leave-active,
+.vux-pop-in-enter-active,
+.vux-pop-in-leave-active {
+  will-change: transform;
+  transition: all 500ms;
+  height: 100%;
+  top: 46px;
+  position: absolute;
+  backface-visibility: hidden;
+  perspective: 1000;
+}
+.vux-pop-out-enter {
+  opacity: 0;
+  transform: translate3d(-100%, 0, 0);
+}
+.vux-pop-out-leave-active {
+  opacity: 0;
+  transform: translate3d(100%, 0, 0);
+}
+.vux-pop-in-enter {
+  opacity: 0;
+  transform: translate3d(100%, 0, 0);
+}
+.vux-pop-in-leave-active {
+  opacity: 0;
+  transform: translate3d(-100%, 0, 0);
 }
 </style>
