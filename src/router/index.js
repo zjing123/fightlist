@@ -9,6 +9,7 @@ import Header from '@/pages/Header'
 import Play from '@/pages/Play'
 import Playresult from '@/pages/Playresult'
 import Result from '@/pages/Result'
+import Test from '@/pages/Test'
 
 Vue.use(Router)
 
@@ -45,9 +46,13 @@ export default new Router({
     name: 'Playresult',
     path: '/playresult',
     component: Playresult
-  },{
+  }, {
     name: 'Result',
     path: '/result/:dataId',
     component: Result
+  }, {
+    name: 'Test',
+    path: '/test',
+    component: Test
   }]
 })

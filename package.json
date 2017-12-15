@@ -16,6 +16,7 @@
     "lodash": "^4.17.4",
     "vue": "^2.5.2",
     "vue-instant": "^1.0.2",
+    "vue-multiple-input": "^1.0.3",
     "vue-multiple-progress": "^1.3.0",
     "vue-progress": "^0.2.1",
     "vue-router": "^3.0.1",

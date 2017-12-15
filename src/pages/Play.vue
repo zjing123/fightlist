@@ -27,9 +27,9 @@
         <div style="margin-top:15px;">
           <group>
             <x-input class="weui-vcode" placeholder="答案..." autofocus="autofocus" v-model="value" :show-clear="false" :disabled="disabled" @on-enter="onEnter" ref="answerInput" @on-focus="onFocus" @on-blur="onBlur">
-              <x-button slot="right" type="primary" mini @click.native="addResult">确认</x-button>
             </x-input>
           </group>
+          <box><x-button  type="primary" mini @click="addResult">确认</x-button></box>
         </div>
       </div>
     </div>
@@ -72,6 +72,7 @@ export default {
     onImgError (item, $event) {
     },
     onEnter (value, $event) {
+      console.log('onenter')
       let name = value
       if(name !== null && name !== undefined && name !== '') {
         let score = this.question.answers.findIndex(x => x === name) !== -1 ? 1 : 0
@@ -96,11 +97,13 @@ export default {
       }
     },
     onFocus(value, $event) {
-      this.scrollHeight = '80px';
-      document.body.scrollTop = 0;
+      //this.scrollHeight = '80px';
+      //document.body.scrollTop = 0;
+      console.log('onfocus')
     },
     onBlur(value, $event) {
-      this.scrollHeight = '-250';
+      //this.scrollHeight = '-250';
+      console.log($event)
     },
     ...mapMutations([
       'pushCurrentResult',
