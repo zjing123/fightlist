@@ -26,10 +26,30 @@
         </div>
         <div style="margin-top:15px;">
           <group>
-            <x-input class="weui-vcode" placeholder="答案..." autofocus="autofocus" v-model="value" :show-clear="false" :disabled="disabled" @on-enter="onEnter" ref="answerInput" @on-focus="onFocus" @on-blur="onBlur">
-            </x-input>
+            <div data-v-30f16050="" class="vux-x-input weui-cell weui-vcode">
+              <div class="weui-cell__bd weui-cell__primary">
+                <input
+                id="vux-x-input-q4sfh"
+                autocomplete="off"
+                autocapitalize="off"
+                autocorrect="off"
+                :autofocus="autofocus"
+                spellcheck="false"
+                type="text"
+                placeholder="答案..."
+                class="weui-input"
+                @focus="focusHandle"
+                @blur="blurHandle"
+                @keyup.enter="enterHandle"
+                v-model="value"
+                ref="answerInput"
+                >
+              </div>
+              <div class="weui-cell__ft">
+                <x-button type="primary" mini @click.native="submitHandle" v-show="showButton">确认</x-button>
+              </div>
+            </div>
           </group>
-          <box><x-button  type="primary" mini @click="addResult">确认</x-button></box>
         </div>
       </div>
     </div>
@@ -57,7 +77,7 @@ export default {
       gameStart: 1,
       panelType: '4',
       result: {
-        questionId: null,
+        id: null,
         title: null,
         answers: []
       },
@@ -65,45 +85,43 @@ export default {
       showAnswerBox: false,
       clasScoreNum: 'score-num',
       value:'',
-      scrollHeight: '-250'
+      scrollHeight: '-250',
+      autofocus: false,
+      showButton: false
     }
   },
   methods: {
     onImgError (item, $event) {
     },
-    onEnter (value, $event) {
-      console.log('onenter')
-      let name = value
+    enterHandle (e) {
+      let name = this.value
       if(name !== null && name !== undefined && name !== '') {
-        let score = this.question.answers.findIndex(x => x === name) !== -1 ? 1 : 0
+        //let score = this.question.answers.findIndex(x => x === name) !== -1 ? 1 : 0
+        let score = this.getScore(this.question.id, name)
         this.result.answers.unshift({title: name, score: score})
-        this.scrollHeight = '-250';
-        this.$refs.answerInput.reset()
+        this.$refs.answerInput.focus()
+        this.value = ''
       } else {
         this.$refs.answerInput.focus()
       }
-
-      //this.$refs.answerInput.focus()
     },
-    addResult() {
+    focusHandle($event) {
+      this.scrollHeight = '80px';
+      document.body.scrollTop = 0;
+    },
+    blurHandle($event) {
+      this.scrollHeight = '-250';
+    },
+    submitHandle($event) {
       let name = this.value
       if(name !== null && name !== undefined && name !== '') {
         let score = this.question.answers.findIndex(x => x === name) !== -1 ? 1 : 0
         this.result.answers.unshift({title: name, score: score})
-        this.scrollHeight = '-250';
-        this.$refs.answerInput.reset()
+        this.$refs.answerInput.focus()
+        this.value = ''
       } else {
         this.$refs.answerInput.focus()
       }
-    },
-    onFocus(value, $event) {
-      //this.scrollHeight = '80px';
-      //document.body.scrollTop = 0;
-      console.log('onfocus')
-    },
-    onBlur(value, $event) {
-      //this.scrollHeight = '-250';
-      console.log($event)
     },
     ...mapMutations([
       'pushCurrentResult',
@@ -122,7 +140,8 @@ export default {
     }),
     ...mapGetters({
       question: 'getQuestion',
-      getQuestionByid: 'getQuestionById'
+      getQuestionByid: 'getQuestionById',
+      getScore: 'getScore'
     }),
     disabled () {
       return this.time <= 0
@@ -136,8 +155,8 @@ export default {
   watch: {
     '$store.state.time': function () {
       if (this.time <= 0) {
-        let questionId = this.question.questionId
-        this.result.questionId = questionId
+        let questionId = this.question.id
+        this.result.id = questionId
         this.result.title = this.question.title
         this.pushCurrentResult(this.result)
         this.pushUsedIndex(questionId)
@@ -221,5 +240,16 @@ export default {
     }
     .score-num-3 {
       background-color: #b966f3;
+    }
+    .weui-input {
+        width: 100%;
+        border: 0;
+        outline: 0;
+        -webkit-appearance: none;
+        background-color: transparent;
+        font-size: inherit;
+        color: inherit;
+        height: 1.41176471em;
+        line-height: 1.41176471;
     }
 </style>

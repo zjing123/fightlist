@@ -203,19 +203,19 @@ export default {
     }
 
     this.currentResult = this.getLastCurrentResult
-    console.log(this.currentResult)
-
-    this.$http.post("api/fights", params).then((response) => {
-      if (response.data.status == 'success') {
-        this.$store.commit('setQuestions', response.data.data)
-        this.$store.commit('setFightId', response.data.data)
-      } else {
-        this.$vux.toast.text(response.data.message, 'middle')
-      }
-    }).catch(err => {
-      console.log(err)
-      this.$vux.toast.text('数据获取失败', 'middle')
-    })
+    // console.log(this.currentResult)
+    //
+    // this.$http.post("api/fights", params).then((response) => {
+    //   if (response.data.status == 'success') {
+    //     this.$store.commit('setQuestions', response.data.data)
+    //     this.$store.commit('setFightId', response.data.data)
+    //   } else {
+    //     this.$vux.toast.text(response.data.message, 'middle')
+    //   }
+    // }).catch(err => {
+    //   console.log(err)
+    //   this.$vux.toast.text('数据获取失败', 'middle')
+    // })
 
 
   }

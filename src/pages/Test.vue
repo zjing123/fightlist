@@ -4,23 +4,46 @@
       <img class="logo" src="../assets/vux_logo.png">
       <h1> </h1>
     </div>
-    <group title="cell demo">
-      <x-input title="title" v-model="value" ref="input" @on-focus="onfocus"></x-input>
+    <group>
+      <x-button type="primary"></x-button>
     </group>
+    <group>
+      <div data-v-30f16050="" class="vux-x-input weui-cell weui-vcode">
+        <div class="weui-cell__bd weui-cell__primary">
+          <input
+          id="vux-x-input-q4sfh"
+          autocomplete="off"
+          autocapitalize="off"
+          autocorrect="off"
+          autofocus="autofocus"
+          spellcheck="false"
+          type="text"
+          placeholder="答案..."
+          class="weui-input"
+          @focus="onfocus"
+          ref="input"
+          v-focus
+          >
+        </div>
+        <div class="weui-cell__ft">
+          <x-button type="primary" mini @click.native="onsubmit">确认</x-button>
+        </div>
+      </div>
+    </group>
+
   </div>
 </template>
 
 <script>
-import { Group, Cell, XInput} from 'vux'
+import { Group, Cell, XInput, XButton} from 'vux'
 import VmInput from 'vue-multiple-input'
-
 
 export default {
   components: {
     Group,
     Cell,
     XInput,
-    VmInput
+    XButton
   },
   data () {
     return {
@@ -29,18 +52,17 @@ export default {
     }
   },
   methods: {
-    onblur(value, $event) {
+    onblur($event) {
       $event.target.focus()
-      console.log(this.$refs.input)
     },
-    onfocus(value, $event) {
+    onfocus($event) {
       $event.target.focus()
-      console.log(this.$refs.input)
     },
-    onenter(value, $event) {
-      $event.target.click();
+    onenter($event) {
       $event.target.focus()
-      console.log(this.$refs.input)
+    },
+    onsubmit($event) {
+      this.$refs.input.focus()
     }
   },
   directives: {
@@ -50,7 +72,7 @@ export default {
         el.focus()
       }
     }
-}
+  }
 }
 </script>
 
@@ -61,5 +83,16 @@ export default {
 .logo {
   width: 100px;
   height: 100px
+}
+.weui-input {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    -webkit-appearance: none;
+    background-color: transparent;
+    font-size: inherit;
+    color: inherit;
+    height: 1.41176471em;
+    line-height: 1.41176471;
 }
 </style>

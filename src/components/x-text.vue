@@ -18,93 +18,10 @@
       :autocomplete="autocomplete"
       :autocapitalize="autocapitalize"
       :autocorrect="autocorrect"
+      :autofocus="autofocus"
       :spellcheck="spellcheck"
       :style="inputStyle"
       type="text"
-      :name="name"
-      :pattern="pattern"
-      :placeholder="placeholder"
-      :readonly="readonly"
-      :disabled="disabled"
-      v-model="currentValue"
-      @focus="focusHandler"
-      @blur="onBlur"
-      @keyup="onKeyUp"
-      ref="input"/>
-      <input
-      :id="`vux-x-input-${uuid}`"
-      v-if="type === 'number'"
-      class="weui-input"
-      :maxlength="max"
-      :autocomplete="autocomplete"
-      :autocapitalize="autocapitalize"
-      :autocorrect="autocorrect"
-      :spellcheck="spellcheck"
-      :style="inputStyle"
-      type="number"
-      :name="name"
-      :pattern="pattern"
-      :placeholder="placeholder"
-      :readonly="readonly"
-      :disabled="disabled"
-      v-model="currentValue"
-      @focus="focusHandler"
-      @blur="onBlur"
-      @keyup="onKeyUp"
-      ref="input"/>
-      <input
-      :id="`vux-x-input-${uuid}`"
-      v-if="type === 'email'"
-      class="weui-input"
-      :maxlength="max"
-      :autocomplete="autocomplete"
-      :autocapitalize="autocapitalize"
-      :autocorrect="autocorrect"
-      :spellcheck="spellcheck"
-      :style="inputStyle"
-      type="email"
-      :name="name"
-      :pattern="pattern"
-      :placeholder="placeholder"
-      :readonly="readonly"
-      :disabled="disabled"
-      v-model="currentValue"
-      @focus="focusHandler"
-      @blur="onBlur"
-      @keyup="onKeyUp"
-      ref="input"/>
-      <input
-      :id="`vux-x-input-${uuid}`"
-      v-if="type === 'password'"
-      class="weui-input"
-      :maxlength="max"
-      :autocomplete="autocomplete"
-      :autocapitalize="autocapitalize"
-      :autocorrect="autocorrect"
-      :spellcheck="spellcheck"
-      :style="inputStyle"
-      type="password"
-      :name="name"
-      :pattern="pattern"
-      :placeholder="placeholder"
-      :readonly="readonly"
-      :disabled="disabled"
-      v-model="currentValue"
-      @focus="focusHandler"
-      @blur="onBlur"
-      @keyup="onKeyUp"
-      ref="input"/>
-      <input
-      :id="`vux-x-input-${uuid}`"
-      v-if="type === 'tel'"
-      class="weui-input"
-      :maxlength="max"
-      :autocomplete="autocomplete"
-      :autocapitalize="autocapitalize"
-      :autocorrect="autocorrect"
-      :spellcheck="spellcheck"
-      :style="inputStyle"
-      type="tel"
       :name="name"
       :pattern="pattern"
       :placeholder="placeholder"
@@ -258,7 +175,11 @@ export default {
     shouldToastError: {
       type: Boolean,
       default: true
-    }
+    },
+		autofocus: {
+			type: String,
+			default: 'autofocus'
+		}
   },
   computed: {
     labelStyles () {
