@@ -38,7 +38,7 @@ export const getLastCurrentResult = state => {
 export const getNextCurrentResult = state => (questionId) => {
   let nextCurrentResult = null
   let index = _.findIndex(state.currentResults, function(result){
-    return result.questionId == questionId
+    return result.id == questionId
   })
 
   let nextIndex = index + 1
@@ -55,7 +55,7 @@ export const getNextCurrentResult = state => (questionId) => {
 export const getPrevCurrentResult = state => (questionId) => {
   let prevCurrentResult = null
   let index = _.findIndex(state.currentResults, function(result) {
-    return result.questionId == questionId
+    return result.id == questionId
   })
 
   let prevIndex = index -1
