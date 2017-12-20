@@ -15,3 +15,18 @@ export const start = ({ commit, state })=> {
     }
   }, 1000)
 }
+
+export const initData = ({ commit, state }) => {
+  var windowLocalStorage = window.localStorage
+  if(windowLocalStorage.getItem('currentResults')) {
+    state.currentResults = JSON.parse(windowLocalStorage.getItem('currentResults'))
+  }
+
+  if(windowLocalStorage.getItem('fight_id')) {
+    state.fight_id = windowLocalStorage.getItem('fight_id')
+  }
+
+  if(windowLocalStorage.getItem('')){
+
+  }
+}

@@ -75,8 +75,8 @@
               <x-table :cell-bordered="false">
                <tbody>
                  <tr v-for="i in question.answers">
-                   <td style="width:60%;text-align:left;padding-left:20%;">{{i}}</td>
-                   <td style="text-align:left;padding-left:10%;"><span class="score-num score-num-1">+1</span></td>
+                   <td style="width:60%;text-align:left;padding-left:20%;">{{i.title}}</td>
+                   <td style="text-align:left;padding-left:10%;"><span class="score-num score-num-1">+{{i.score}}</span></td>
                  </tr>
                </tbody>
              </x-table>
@@ -148,11 +148,11 @@ export default {
       this.syncResult()
     },
     getNextResult () {
-      let result = this.getNextCurrentResult(this.currentResult.result.questionId)
+      let result = this.getNextCurrentResult(this.currentResult.result.id)
       this.currentResult = result
     },
     getPrevResult () {
-      let result = this.getPrevCurrentResult(this.currentResult.result.questionId)
+      let result = this.getPrevCurrentResult(this.currentResult.result.id)
       this.currentResult = result
     }
   },
@@ -183,14 +183,17 @@ export default {
       }
     },
     getScore () {
-      let score = 0
-      for( var i in this.currentResult.result.answers) {
-        score += this.currentResult.result.answers[i].score;
+      var score = 0
+      for( let i in this.currentResult.result.answers) {
+        if(this.currentResult.result.answers[i].score !== undefined) {
+          score += parseInt(this.currentResult.result.answers[i].score, 10);
+        }
       }
+
       return score;
     },
     question () {
-      return this.getQuestionById(this.currentResult.result.questionId)
+      return this.getQuestionById(this.currentResult.result.id)
     }
   },
   mounted() {
@@ -198,26 +201,7 @@ export default {
     })
   },
   created () {
-    let params = {
-      type: 1,//单人游戏
-    }
-
     this.currentResult = this.getLastCurrentResult
-    // console.log(this.currentResult)
-    //
-    // this.$http.post("api/fights", params).then((response) => {
-    //   if (response.data.status == 'success') {
-    //     this.$store.commit('setQuestions', response.data.data)
-    //     this.$store.commit('setFightId', response.data.data)
-    //   } else {
-    //     this.$vux.toast.text(response.data.message, 'middle')
-    //   }
-    // }).catch(err => {
-    //   console.log(err)
-    //   this.$vux.toast.text('数据获取失败', 'middle')
-    // })
-
-
   }
 }
 </script>

@@ -11,7 +11,7 @@
       </blur>
     </div>
     <div class="play-button">
-      <x-button type="primary" link="/play">开始游戏</x-button>
+      <x-button type="primary" link="/play" v-show="isplay">开始游戏</x-button>
     </div>
   </div>
 </template>
@@ -44,7 +44,8 @@ export default {
         'https://o3e85j0cv.qnssl.com/tulips-1083572__340.jpg',
         'https://o3e85j0cv.qnssl.com/waterway-107810__340.jpg',
         'https://o3e85j0cv.qnssl.com/hot-chocolate-1068703__340.jpg'
-      ]
+      ],
+      isplay: false
     }
   },
   methods: {
@@ -65,10 +66,12 @@ export default {
       type: 1,//单人游戏
     }
 
+    var that = this
     this.$http.post("api/fights", params).then((response) => {
       if (response.data.status == 'success') {
         this.$store.commit('setQuestions', response.data.data)
         this.$store.commit('setFightId', response.data.data)
+        that.isplay = true
       } else {
         this.$vux.toast.text(response.data.message, 'middle')
       }

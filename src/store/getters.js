@@ -20,9 +20,11 @@ export const getQuestionById = state => (id) => {
 
 export const getScore = state => (questionId, answerTitle) => {
   let question = state.questions.find(question => question.id === questionId)
-  return _.result(_.find(question.answers, function(answer) {
+  let score =  _.result(_.find(question.answers, function(answer) {
     return answer.title === answerTitle
   }), 'score')
+
+  return score === undefined ? 0 : score
 }
 
 export const getFirstCurrentResult = state => {
