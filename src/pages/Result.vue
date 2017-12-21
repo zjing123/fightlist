@@ -1,25 +1,25 @@
 <template>
   <div>
     <div >
-      <blur :blur-amount="10" :url="userImageSrc" :height="180" @click.native="showResult">
+      <blur :blur-amount="10" :url="userImageSrc" :height="180">
       <p class="center">
         <img :src="userImageSrc">
       </p>
-      <p style="text-align:center;color:#fff;" >
+      <p style="text-align:center;color:#fff;">
         <span style="margin-top:5px;">{{ state.username }}</span>
       </p>
       </blur>
     </div>
-    <div style="text-align:center;"  v-if="result">
+    <div style="text-align:center;" v-if="result">
       <div style="padding:10px 0 5px 0;margin-left:5%;height:70%;width:90%;">
         <div class="scroller-pre scroller-pre-nopadding">
-          <panel :header="result.question"  :type="type" @on-img-error="onImgError"></panel>
+          <panel :header="result.result.title"  :type="type" @on-img-error="onImgError"></panel>
           <scroller lock-x height="-380" ref="scroller" class="answer-content-no-radius">
              <div class="box2">
-               <div  v-if="result.answers.length">
+               <div  v-if="result.result.answers.length">
                  <x-table :cell-bordered="false">
                   <tbody>
-                    <tr v-for="answer in result.answers">
+                    <tr v-for="answer in result.result.answers">
                       <td style="width:60%;text-align:left;padding-left:20%;">{{answer.title}}</td>
                       <td style="text-align:left;padding-left:10%;">
                         <span :class="[clasScoreNum, clasScoreNum + '-' + answer.score]">{{answer.score != 0 ? '+' : ''}}{{answer.score}}</span>
@@ -33,8 +33,8 @@
           <div style="background:#f8f8f8;height:40px;">
             <flexbox>
               <flexbox-item>
-                <div class="flex-demo prev-game" v-show="resultIndex != 0">
-                  <a href="javascript:void(0);" @click.navite="indexDecrement">上一个</a>
+                <div class="flex-demo prev-game" v-show="!result.isFirst">
+                  <a href="javascript:void(0);" @click.navite="prevResult">上一个</a>
                 </div>
             </flexbox-item>
               <flexbox-item>
@@ -43,8 +43,8 @@
                 </div>
                 </flexbox-item>
               <flexbox-item>
-                <div class="flex-demo next-game" v-show="resultIndex != currentResults.length - 1">
-                  <a href="javascript:void(0);" @click.navite="indexIncrement(currentResults.length - 1)">下一个</a>
+                <div class="flex-demo next-game" v-show="!result.isLast">
+                  <a href="javascript:void(0);" @click.navite="nextResult">下一个</a>
                 </div>
             </flexbox-item>
             </flexbox>
@@ -55,22 +55,22 @@
             </box>
           </div>
         </div>
-        <div style="margin-top:10px;">
-          <x-button type="primary" link="/">返回首页</x-button>
+        <div style="margin-top:10px;" v-show="false">
+          <x-button type="primary" link="/play" @click.native="questionIndexIncrement">继续游戏</x-button>
         </div>
       </div>
     </div>
     <div>
       <x-dialog v-model="showAnswerBox">
         <div v-if="result">
-          <panel :header="questions[result.questionId].question"  :type="type" @on-img-error="onImgError"></panel>
+          <panel :header="result.result.title"  :type="type" @on-img-error="onImgError"></panel>
           <div class="box2" style="height:200px;padding:0 0 15px;overflow:scroll;-webkit-overflow-scrolling:touch;">
-            <div  v-if="questions[result.questionId].answers.length">
+            <div  v-if="result.result.right.length">
               <x-table :cell-bordered="false">
                <tbody>
-                 <tr v-for="i in questions[result.questionId].answers">
-                   <td style="width:60%;text-align:left;padding-left:20%;">{{i}}</td>
-                   <td style="text-align:left;padding-left:10%;"><span class="score-num score-num-1">+1</span></td>
+                 <tr v-for="i in result.result.right">
+                   <td style="width:60%;text-align:left;padding-left:20%;">{{i.title}}</td>
+                   <td style="text-align:left;padding-left:10%;"><span class="score-num score-num-1">+{{i.score}}</span></td>
                  </tr>
                </tbody>
              </x-table>
@@ -116,7 +116,13 @@ export default {
       striped: true,
       showAnswerBox: false,
       clasScoreNum: 'score-num',
+      result:null,
       userImageSrc: 'https://o3e85j0cv.qnssl.com/tulips-1083572__340.jpg',
+      images: [
+        'https://o3e85j0cv.qnssl.com/tulips-1083572__340.jpg',
+        'https://o3e85j0cv.qnssl.com/waterway-107810__340.jpg',
+        'https://o3e85j0cv.qnssl.com/hot-chocolate-1068703__340.jpg'
+      ]
     }
   },
   methods: {
@@ -126,36 +132,87 @@ export default {
       'indexIncrement',
       'indexDecrement',
       'questionIndexIncrement',
+      'setTitle',
+      'syncResult',
+      'setResults'
     ]),
     showAnswer () {
       this.showAnswerBox = true
     },
-    showResult() {
-      console.log(this.getResult())
-    }
+    syncData() {
+      this.syncResult()
+      window.localStorage.clear()
+    },
+    nextResult () {
+      this.result = this.getNextResult(this.result.result.id)
+    },
+    prevResult () {
+      this.result = this.getPrevResult(this.result.result.id)
+    },
   },
   computed: {
     ...mapState({
+      route: state => state.route,
+      path: state => state.route.path,
       state: state => state,
-      dataId: state => state.route.params.dataId,
       questions: state => state.questions,
-      question: state => state.questions,
+      time: state => state.time,
       percentage: state => state.percentage,
-      currentResults: state => state.results[state.route.params.dataId].results,
-      result: state => state.results[state.route.params.dataId].results[state.index],
-      resultIndex: state => state.index,
+      currentResults: state => state.currentResults
     }),
+    ...mapGetters([
+      'getFirstResult',
+      'getLastResult',
+      'getNextResult',
+      'getPrevResult',
+      'getQuestionById',
+      'isEnd'
+    ]),
+    gameState () {
+      let len = this.currentResults.length;
+      if(len == 0) {
+        return 1;
+      } else if (len < 3) {
+        return 2;
+      } {
+        return 3;
+      }
+    },
     getScore () {
-      let score = 0
-      for( var i in this.result.answers) {
-        score += this.result.answers[i].score;
+      var score = 0
+      for( let i in this.result.result.answers) {
+        if(this.result.result.answers[i].score !== undefined) {
+          score += parseInt(this.result.result.answers[i].score, 10);
+        }
       }
       return score;
+    },
+    question () {
+      return this.getQuestionById(this.result.result.id)
+    },
+    fetchData () {
+      let id = this.$route.params.dataId | 0
+      var that = this
+      this.$http.get(BASE_URL + "fights/" + id).then((response) => {
+        if(response.data.status == 'success') {
+          this.setResults(response.data.data)
+          this.result = this.getFirstResult
+          console.log(this.result)
+        } else {
+          this.$vux.toast.text(response.data.data.message, 'middle')
+        }
+      }).catch(err => {
+        this.$vux.toast.text('数据获取失败', 'middle')
+      })
     }
   },
   mounted() {
     this.$nextTick(()=>{
     })
+  },
+  created () {
+    this.fetchData
+
   }
 }
 </script>

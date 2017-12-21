@@ -26,7 +26,15 @@ export const initData = ({ commit, state }) => {
     state.fight_id = windowLocalStorage.getItem('fight_id')
   }
 
-  if(windowLocalStorage.getItem('')){
+  if(windowLocalStorage.getItem('questionGroup')){
+    state.questionGroup = windowLocalStorage.getItem('questionGroup')
+  }
 
+  if(windowLocalStorage.getItem('questions')) {
+    state.questions = JSON.parse(windowLocalStorage.getItem('questions'))
+  }
+
+  if(windowLocalStorage.getItem('usedIndexes')) {
+    state.usedIndexes = JSON.parse(windowLocalStorage.getItem('usedIndexes'))
   }
 }

@@ -66,19 +66,24 @@ export default {
       type: 1,//单人游戏
     }
 
-    var that = this
-    this.$http.post("api/fights", params).then((response) => {
-      if (response.data.status == 'success') {
-        this.$store.commit('setQuestions', response.data.data)
-        this.$store.commit('setFightId', response.data.data)
-        that.isplay = true
-      } else {
-        this.$vux.toast.text(response.data.message, 'middle')
-      }
-    }).catch(err => {
-      console.log(err)
-      this.$vux.toast.text('数据获取失败', 'middle')
-    })
+    let localStorage = window.localStorage
+    if(!localStorage.getItem('questions')) {
+      var that = this
+      this.$http.post(BASE_URL + "fights", params).then((response) => {
+        if (response.data.status == 'success') {
+          this.$store.commit('setQuestions', response.data.data)
+          this.$store.commit('setFightId', response.data.data)
+          that.isplay = true
+        } else {
+          this.$vux.toast.text(response.data.message, 'middle')
+        }
+      }).catch(err => {
+        console.log(err)
+        this.$vux.toast.text('数据获取失败', 'middle')
+      })
+    } else {
+      this.isplay = true
+    }
   }
 }
 </script>

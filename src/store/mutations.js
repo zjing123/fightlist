@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import config from '@/config/base.config'
+let localStorage = window.localStorage
 
 export const updateLoadingStatus = (state, payload) => {
   state.isLoading = payload.isLoading
@@ -32,12 +33,15 @@ export const setQuestions = (state, data) => {
   if(data) {
     state.questions = data.questions
     state.questionGroup = data.group
+    localStorage.setItem('questions', JSON.stringify(state.questions))
+    localStorage.setItem('questionGroup', state.questionGroup)
   }
 }
 
 export const setFightId = (state, data) => {
   if(!state.fight_id) {
       state.fight_id = data.fight_id
+      localStorage.setItem('fight_id', state.fight_id)
   }
 }
 
@@ -65,6 +69,7 @@ export const initParams = state => {
 
 export const pushCurrentResult = (state, result) => {
   state.currentResults.push(result)
+  localStorage.setItem('currentResults', JSON.stringify(state.currentResults))
 }
 
 export const syncResult = state => {
@@ -94,6 +99,7 @@ export const setQuestionIndexToIndex = state => {
  */
 export const pushUsedIndex = (state, id) => {
   _.uniq(state.usedIndexes.push(id))
+  localStorage.setItem('usedIndexes', JSON.stringify(state.usedIndexes))
 }
 
 export const disableShowBack = state => {
@@ -102,4 +108,8 @@ export const disableShowBack = state => {
 
 export const enableShowBack = state => {
   state.showBack = true
+}
+
+export const setResults = (state, payload) => {
+  state.results = payload.results
 }

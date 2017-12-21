@@ -25,6 +25,10 @@ AjaxPlugin.$http.defaults.headers.common['Authorization'] = 'Bearer ' + config.a
 Vue.use(AjaxPlugin)
 Vue.use(ToastPlugin)
 
+//同步本地数据
+store.dispatch('initData')
+console.log(window.localStorage)
+
 sync(store, router)
 
 router.afterEach((to, from) => {

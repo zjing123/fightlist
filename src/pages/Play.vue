@@ -96,7 +96,6 @@ export default {
     enterHandle (e) {
       let name = this.value
       if(name !== null && name !== undefined && name !== '') {
-        //let score = this.question.answers.findIndex(x => x === name) !== -1 ? 1 : 0
         let score = this.getScore(this.question.id, name)
         this.result.answers.unshift({title: name, score: score})
         this.$refs.answerInput.focus()
@@ -167,7 +166,7 @@ export default {
           finished: 1
         }
 
-        this.$http.post("api/fightrecords", params).then((response) => {
+        this.$http.post(BASE_URL + "fightrecords", params).then((response) => {
           if (response.data.status == 'success') {
 
           } else {

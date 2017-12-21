@@ -70,3 +70,51 @@ export const getPrevCurrentResult = state => (questionId) => {
 
   return {result: prevCurrentResult, isFirst: isFirst, isLast: isLast }
 }
+
+export const isEnd = state => {
+  return state.questions.length === state.currentResults.length ? true : false;
+}
+
+export const getFirstResult = state => {
+  let isLast = (0 == state.results.length - 1)
+  return {result: _.first(state.results), isFirst: true, isLast: isLast}
+}
+
+export const getLastResult = state => {
+  let isFirst = (0 == state.results.length - 1)
+  return {result: _.last(state.results), isFirst: isFirst, isLast: true}
+}
+
+export const getNextResult = state => (questionId) => {
+  let nextResult = null
+  let index = _.findIndex(state.results, function(result){
+    return result.id == questionId
+  })
+
+  let nextIndex = index + 1
+  if(nextIndex <= state.results.length - 1) {
+    nextResult = state.results[nextIndex]
+  }
+
+  let isFirst = (nextIndex == 0)
+  let isLast = (nextIndex == state.results.length - 1)
+
+  return {result: nextResult, isLast:isLast, isFirst: isFirst}
+}
+
+export const getPrevResult = state => (questionId) => {
+  let prevResult = null
+  let index = _.findIndex(state.results, function(result) {
+    return result.id == questionId
+  })
+
+  let prevIndex = index -1
+  if(prevIndex >= 0) {
+    prevResult = state.results[prevIndex]
+  }
+
+  let isFirst = (prevIndex == 0)
+  let isLast = (prevIndex == state.results.length -1)
+  console.log(questionId, prevResult)
+  return {result: prevResult, isFirst: isFirst, isLast: isLast }
+}

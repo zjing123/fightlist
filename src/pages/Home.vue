@@ -5,7 +5,7 @@
     </box>
     <div style="margin-top:30px;" v-if="fights">
       <group title="<span class='title'>游戏记录</span>" class="game-info">
-        <cell is-link v-for="(fight, index) in fights" :link="{name: 'result', params:{dataId: fight.id}}">
+        <cell is-link v-for="(fight, index) in fights" :key="fight.id" :link="{name: 'Result', params:{dataId: fight.id}}">
           <div slot="title">
             <div class="circular--landscape" >
               <img src="../assets/user.jpg"/>
@@ -62,7 +62,7 @@ export default {
   },
   created () {
     let that = this
-    this.$http.get("/api/fights").then((response) => {
+    this.$http.get(BASE_URL + "fights").then((response) => {
       if(response.data.status == 'success') {
         that.fights = response.data.data.fights
         that.fightings = response.data.data.fightings

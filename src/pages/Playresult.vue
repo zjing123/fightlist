@@ -10,7 +10,7 @@
       </p>
       </blur>
     </div>
-    <div style="text-align:center;" v-if="currentResult.result" v-show="gameState !== 1">
+    <div style="text-align:center;" v-if="currentResult.result">
       <div style="padding:10px 0 5px 0;margin-left:5%;height:70%;width:90%;">
         <div class="scroller-pre scroller-pre-nopadding">
           <panel :header="currentResult.result.title"  :type="type" @on-img-error="onImgError"></panel>
@@ -55,16 +55,13 @@
             </box>
           </div>
         </div>
-        <div style="margin-top:10px;" v-show="gameState == 2">
+        <div style="margin-top:10px;" v-show="!isEnd">
           <x-button type="primary" link="/play" @click.native="questionIndexIncrement">继续游戏</x-button>
         </div>
-        <div style="margin-top:10px;" v-show="gameState == 3">
+        <div style="margin-top:10px;" v-show="isEnd">
           <x-button type="primary" link="/" @click.native="syncData">返回首页</x-button>
         </div>
       </div>
-    </div>
-    <div class="play-button" v-show="gameState == 1">
-      <x-button type="primary" link="/play">开始游戏</x-button>
     </div>
     <div>
       <x-dialog v-model="showAnswerBox">
@@ -146,6 +143,7 @@ export default {
     },
     syncData() {
       this.syncResult()
+      window.localStorage.clear()
     },
     getNextResult () {
       let result = this.getNextCurrentResult(this.currentResult.result.id)
@@ -170,7 +168,8 @@ export default {
       'getLastCurrentResult',
       'getNextCurrentResult',
       'getPrevCurrentResult',
-      'getQuestionById'
+      'getQuestionById',
+      'isEnd'
     ]),
     gameState () {
       let len = this.currentResults.length;
