@@ -87,7 +87,7 @@ export default {
       value:'',
       scrollHeight: '-250',
       autofocus: false,
-      showButton: false
+      showButton: true
     }
   },
   methods: {

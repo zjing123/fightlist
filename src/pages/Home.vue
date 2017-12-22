@@ -3,7 +3,7 @@
     <box gap="10px 10px">
        <x-button type="primary" link="/newgame">新游戏</x-button>
     </box>
-    <div style="margin-top:30px;" v-if="fights">
+    <div style="margin-top:30px;" v-if="!!fights">
       <group title="<span class='title'>游戏记录</span>" class="game-info">
         <cell is-link v-for="(fight, index) in fights" :key="fight.id" :link="{name: 'Result', params:{dataId: fight.id}}">
           <div slot="title">

@@ -14,8 +14,6 @@ import 'vue-instant/dist/vue-instant.css'
 import VueInstant from 'vue-instant'
 import config from '@/config/base.config'
 
-//console.log(typeof getRouterTitle)
-
 Vue.use(VueInstant)
 
 Vue.use(VueRouter)
@@ -27,7 +25,6 @@ Vue.use(ToastPlugin)
 
 //同步本地数据
 store.dispatch('initData')
-console.log(window.localStorage)
 
 sync(store, router)
 

@@ -14,7 +14,7 @@
       <div style="padding:10px 0 5px 0;margin-left:5%;height:70%;width:90%;">
         <div class="scroller-pre scroller-pre-nopadding">
           <panel :header="currentResult.result.title"  :type="type" @on-img-error="onImgError"></panel>
-          <scroller lock-x height="-380" ref="scroller" class="answer-content-no-radius">
+          <scroller lock-x height="-420" ref="scroller" class="answer-content-no-radius">
              <div class="box2">
                <div  v-if="currentResult.result.answers.length">
                  <x-table :cell-bordered="false">

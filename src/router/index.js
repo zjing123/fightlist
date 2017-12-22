@@ -10,6 +10,7 @@ import Play from '@/pages/Play'
 import Playresult from '@/pages/Playresult'
 import Result from '@/pages/Result'
 import Test from '@/pages/Test'
+import Index from '@/pages/Index'
 
 Vue.use(Router)
 
@@ -54,5 +55,9 @@ export default new Router({
     name: 'Test',
     path: '/test',
     component: Test
+  }, {
+    name: 'Index',
+    path: '/index',
+    component: Index
   }]
 })
