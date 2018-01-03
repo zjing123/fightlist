@@ -1,8 +1,19 @@
 <template>
   <div style="height:100%;">
-    <view-box ref="viewBox" body-padding-top="46px" body-padding-bottom="55px">
+    <div v-transfer-dom>
+     <actionsheet :menus="menus" v-model="showMenu" @on-click-menu="changeLocale"></actionsheet>
+   </div>
 
-      <x-header slot="header" :title="title" class="header" :transition="headerTransition" :left-options="{showBack: showBack}"></x-header>
+    <view-box ref="viewBox" body-padding-top="46px" body-padding-bottom="55px">
+      <x-header
+      slot="header"
+      :title="title"
+      class="header"
+      :transition="headerTransition"
+      :left-options="leftOptions"
+      :right-options="rightOptions"
+      @on-click-more="onClickMore"
+      ></x-header>
 
       <transition
       :name="viewTransition" :css="!!direction"
@@ -23,7 +34,7 @@
 
 <script>
 
-import { ViewBox, XHeader, Tabbar, TabbarItem } from 'vux'
+import { ViewBox, XHeader, Tabbar, TabbarItem, Actionsheet, TransferDomDirective as TransferDom } from 'vux'
 import { mapState, mapAction} from 'vuex'
 import tabbars from './config/tabbar.config'
 
@@ -33,7 +44,11 @@ export default {
     ViewBox,
     XHeader,
     Tabbar,
-    TabbarItem
+    TabbarItem,
+    Actionsheet
+  },
+  directives: {
+    TransferDom
   },
   computed: {
     ...mapState({
@@ -51,14 +66,40 @@ export default {
     viewTransition () {
       if (!this.direction) return ''
       return 'vux-pop-' + (this.direction === 'forward' ? 'in' : 'out')
+    },
+    leftOptions () {
+      return {
+        showBack: this.showBack
+      }
+    },
+    rightOptions () {
+      return {
+        showMore: true
+      }
     }
   },
   methods: {
+    changeLocale (locale) {
+      this.$i18n.set(locale)
+      //this.$locale.set(locale)
+    },
+    onClickMore () {
+      this.showMenu = true
+    }
   },
   data(){
     return {
-      tabbars: tabbars
+      tabbars: tabbars,
+      showMenu: false,
+      menus: {
+        'language.noop': '<span class="menu-title">Language</span>',
+        'zh-CN': '中文',
+        'en': 'English'
+      },
     }
+  },
+  created () {
+    //console.log(this.$i18n.locale())
   }
 }
 </script>

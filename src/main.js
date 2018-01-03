@@ -5,6 +5,7 @@ import FastClick from 'fastclick'
 import VueRouter from 'vue-router'
 import App from './App'
 import Vuex from 'vuex'
+import vuexI18n from 'vuex-i18n'
 import { AjaxPlugin, ToastPlugin } from 'vux'
 import { sync } from 'vuex-router-sync'
 import store from './store'
@@ -19,9 +20,13 @@ Vue.use(VueInstant)
 Vue.use(VueRouter)
 Vue.use(Vuex)
 
+Vue.use(vuexI18n.plugin, store)
+Vue.i18n.set('zh-CN')
+
 AjaxPlugin.$http.defaults.headers.common['Authorization'] = 'Bearer ' + config.access_token
 Vue.use(AjaxPlugin)
 Vue.use(ToastPlugin)
+
 
 //同步本地数据
 store.dispatch('initData')

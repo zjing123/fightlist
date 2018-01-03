@@ -1,7 +1,7 @@
 <template>
   <div>
     <box gap="10px 10px">
-       <x-button type="primary" link="/newgame">新游戏</x-button>
+       <x-button type="primary" link="/newgame">新游戏{{ $t('hello') }}</x-button>
     </box>
     <div style="margin-top:30px;" v-if="!!fights">
       <group title="<span class='title'>游戏记录</span>" class="game-info">
@@ -20,6 +20,27 @@
     </div>
   </div>
 </template>
+
+<!-- <i18n>
+  en:
+    new game: "New Game"
+    game records: "Game Records"
+    score: "Score"
+  zh_CN:
+    new game: "新游戏"
+    game records: "游戏记录"
+    score: "得分"
+</i18n> -->
+<i18n>
+{
+  "en": {
+    "hello": "hello world!"
+  },
+  "zh-CN": {
+    "hello": "你好,世界！"
+  }
+}
+</i18n>
 
 <script>
 import { Tabbar, TabbarItem, Group, Cell, Box, XButton, Toast } from 'vux'

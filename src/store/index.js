@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import vuexI18n from 'vuex-i18n'
 import * as getters from './getters'
 import * as actions from './actions'
 import * as mutations from './mutations'
@@ -27,6 +28,9 @@ const state = {
 }
 
 export default new Vuex.Store({
+  modules: {
+   i18n: vuexI18n.store
+  },
   state,
   getters,
   actions,
