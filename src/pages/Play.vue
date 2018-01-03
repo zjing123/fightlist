@@ -114,7 +114,7 @@ export default {
     submitHandle($event) {
       let name = this.value
       if(name !== null && name !== undefined && name !== '') {
-        let score = this.question.answers.findIndex(x => x === name) !== -1 ? 1 : 0
+        let score = this.getScore(this.question.id, name)
         this.result.answers.unshift({title: name, score: score})
         this.$refs.answerInput.focus()
         this.value = ''

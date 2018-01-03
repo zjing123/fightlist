@@ -24,6 +24,7 @@ export const getScore = state => (questionId, answerTitle) => {
     return answer.title === answerTitle
   }), 'score')
 
+  console.log(questionId, answerTitle, score)
   return score === undefined ? 0 : score
 }
 
