@@ -1,10 +1,10 @@
 <template>
   <div>
     <box gap="10px 10px">
-       <x-button type="primary" link="/newgame">新游戏{{ $t('Today') }}{{ $i18n.locale() }}</x-button>
+       <x-button type="primary" link="/newgame">{{ $t('new game') }}</x-button>
     </box>
     <div style="margin-top:30px;" v-if="!!fights">
-      <group title="<span class='title'>游戏记录</span>" class="game-info">
+      <group title="<span class='title'>$('game records')</span>" class="game-info">
         <cell is-link v-for="(fight, index) in fights" :key="fight.id" :link="{name: 'Result', params:{dataId: fight.id}}">
           <div slot="title">
             <div class="circular--landscape" >
@@ -12,7 +12,7 @@
             </div>
             <div class="game-info-desc">
               <p class="title">{{ fight.user.name }}</p>
-              <p class="desc">得分：<span>{{ fight.score }}</span></p>
+              <p class="desc">{{ $t('score') }}：<span>{{ fight.score }}</span></p>
             </div>
           </div>
         </cell>
@@ -22,31 +22,6 @@
 </template>
 
 <i18n>
-Today:
-  zh_CN: 今天
-This Week:
-  zh_CN: 本周
-This Month:
-  zh-CN: 本月
-Articles:
-  zh-CN: 文章
-Products:
-  zh-CN: 商品
-Articles sync:
-  zh-CN: 文章同步
-Products sync:
-  zh-CN: 商品同步
-All Messages:
-  zh-CN: 所有消息
-New Messages:
-  zh-CN: 新消息
-Red Dot:
-  zh-CN: 红点
-Use v-model to set selected item:
-  zh-CN: 使用 v-model 设置当前选中项
-</i18n>
-
-<!-- <i18n>
 en:
   new game: "New Game"
   game records: "Game Records"
@@ -54,18 +29,8 @@ en:
 zh_CN:
   new game: "新游戏"
   game records: "游戏记录"
-  score: "得分"
-</i18n> -->
-<!-- <i18n>
-{
-  "en": {
-    "hello": "hello world!"
-  },
-  "zh-CN": {
-    "hello": "你好,世界！"
-  }
-}
-</i18n> -->
+  score: 得分
+</i18n>
 
 <script>
 import { Tabbar, TabbarItem, Group, Cell, Box, XButton, Toast } from 'vux'
@@ -92,7 +57,7 @@ export default {
   },
   computed: {
     ...mapState({
-      //results: state => state.results
+      lang: state => state.locale
     }),
     ...mapGetters([
       'getQuestion'
@@ -108,15 +73,18 @@ export default {
   },
   created () {
     let that = this
-    this.$http.get(BASE_URL + "fights").then((response) => {
+    let params = {
+      lang: this.lang
+    }
+    this.$http.get(BASE_URL + "fights", params).then((response) => {
       if(response.data.status == 'success') {
         that.fights = response.data.data.fights
         that.fightings = response.data.data.fightings
       } else {
-        this.$vux.toast.text(response.data.data.message, 'middle')
+        that.$vux.toast.text(response.data.data.message, 'middle')
       }
     }).catch(err => {
-      //this.$vux.toast.text('数据获取失败', 'middle')
+      that.$vux.toast.text('数据获取失败', 'middle')
     })
   }
 }

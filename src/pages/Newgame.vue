@@ -25,6 +25,9 @@
 </div>
 </template>
 
+<i18n>
+</i18n>
+
 <script>
 import { Search, Group, Cell, XButton, Sticky } from 'vux'
 export default {

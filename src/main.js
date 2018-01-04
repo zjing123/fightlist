@@ -1,5 +1,6 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+import objectAssign from 'object-assign'
 import Vue from 'vue'
 import FastClick from 'fastclick'
 import VueRouter from 'vue-router'
@@ -20,18 +21,29 @@ Vue.use(VueInstant)
 Vue.use(VueRouter)
 Vue.use(Vuex)
 
+//同步本地数据
+store.dispatch('initData')
+
+/*vuex-i18n begin*/
 Vue.use(vuexI18n.plugin, store)
-Vue.i18n.set('zh_CN')
-Vue.i18n.add('zh_CN', {})
-Vue.i18n.add('en', {})
+Vue.i18n.set(store.state.locale)
+
+const vuxLocales = require('json-loader!yaml-loader!./locales/all.yml')
+const componentsLocales = require('json-loader!yaml-loader!./locales/components.yml')
+
+const finalLocales = {
+  'en': objectAssign(vuxLocales['en'], componentsLocales['en']),
+  'zh_CN': objectAssign(vuxLocales['zh_CN'],componentsLocales['zh_CN'])
+}
+
+for (let i in finalLocales) {
+  Vue.i18n.add(i, finalLocales[i])
+}
+/*vuex-i18n end*/
 
 AjaxPlugin.$http.defaults.headers.common['Authorization'] = 'Bearer ' + config.access_token
 Vue.use(AjaxPlugin)
 Vue.use(ToastPlugin)
-
-
-//同步本地数据
-store.dispatch('initData')
 
 sync(store, router)
 

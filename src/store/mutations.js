@@ -113,3 +113,8 @@ export const enableShowBack = state => {
 export const setResults = (state, payload) => {
   state.results = payload.results
 }
+
+export const setLocale = (state, payload) => {
+  state.locale = payload.locale
+  localStorage.setItem('locale', state.locale)
+}

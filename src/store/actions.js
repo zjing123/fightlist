@@ -37,4 +37,8 @@ export const initData = ({ commit, state }) => {
   if(windowLocalStorage.getItem('usedIndexes')) {
     state.usedIndexes = JSON.parse(windowLocalStorage.getItem('usedIndexes'))
   }
+
+  if(windowLocalStorage.getItem('locale')) {
+    state.locale = windowLocalStorage.getItem('locale')
+  }
 }

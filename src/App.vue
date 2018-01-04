@@ -35,7 +35,7 @@
 <script>
 
 import { ViewBox, XHeader, Tabbar, TabbarItem, Actionsheet, TransferDomDirective as TransferDom } from 'vux'
-import { mapState, mapAction} from 'vuex'
+import { mapState, mapAction, mapMutations} from 'vuex'
 import tabbars from './config/tabbar.config'
 
 export default {
@@ -79,8 +79,12 @@ export default {
     }
   },
   methods: {
+    ...mapMutations([
+      'setLocale'
+    ]),
     changeLocale (locale) {
       this.$i18n.set(locale)
+      this.setLocale({locale: locale})
       //this.$locale.set(locale)
     },
     onClickMore () {

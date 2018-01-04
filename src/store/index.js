@@ -24,7 +24,8 @@ const state = {
   fight_id:null,
   showBack: true,
   isLoading: false,
-  direction: 'forward'
+  direction: 'forward',
+  locale: 'zh_CN'
 }
 
 export default new Vuex.Store({

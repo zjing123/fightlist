@@ -135,7 +135,8 @@ export default {
       state: state => state,
       time: state => state.time,
       percentage: state => state.percentage,
-      fight_id: state => state.fight_id
+      fight_id: state => state.fight_id,
+      lang: state => state.locale
     }),
     ...mapGetters({
       question: 'getQuestion',
@@ -160,6 +161,7 @@ export default {
         this.pushCurrentResult(this.result)
         this.pushUsedIndex(questionId)
         let params = {
+          lang: this.lang,
           fight_id: this.fight_id,
           question_id: questionId,
           answers: this.result.answers,
