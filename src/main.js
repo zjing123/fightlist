@@ -21,7 +21,9 @@ Vue.use(VueRouter)
 Vue.use(Vuex)
 
 Vue.use(vuexI18n.plugin, store)
-Vue.i18n.set('zh-CN')
+Vue.i18n.set('zh_CN')
+Vue.i18n.add('zh_CN', {})
+Vue.i18n.add('en', {})
 
 AjaxPlugin.$http.defaults.headers.common['Authorization'] = 'Bearer ' + config.access_token
 Vue.use(AjaxPlugin)

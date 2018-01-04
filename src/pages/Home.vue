@@ -1,7 +1,7 @@
 <template>
   <div>
     <box gap="10px 10px">
-       <x-button type="primary" link="/newgame">新游戏{{ $t('hello') }}</x-button>
+       <x-button type="primary" link="/newgame">新游戏{{ $t('Today') }}{{ $i18n.locale() }}</x-button>
     </box>
     <div style="margin-top:30px;" v-if="!!fights">
       <group title="<span class='title'>游戏记录</span>" class="game-info">
@@ -21,17 +21,42 @@
   </div>
 </template>
 
-<!-- <i18n>
-  en:
-    new game: "New Game"
-    game records: "Game Records"
-    score: "Score"
-  zh_CN:
-    new game: "新游戏"
-    game records: "游戏记录"
-    score: "得分"
-</i18n> -->
 <i18n>
+Today:
+  zh_CN: 今天
+This Week:
+  zh_CN: 本周
+This Month:
+  zh-CN: 本月
+Articles:
+  zh-CN: 文章
+Products:
+  zh-CN: 商品
+Articles sync:
+  zh-CN: 文章同步
+Products sync:
+  zh-CN: 商品同步
+All Messages:
+  zh-CN: 所有消息
+New Messages:
+  zh-CN: 新消息
+Red Dot:
+  zh-CN: 红点
+Use v-model to set selected item:
+  zh-CN: 使用 v-model 设置当前选中项
+</i18n>
+
+<!-- <i18n>
+en:
+  new game: "New Game"
+  game records: "Game Records"
+  score: "Score"
+zh_CN:
+  new game: "新游戏"
+  game records: "游戏记录"
+  score: "得分"
+</i18n> -->
+<!-- <i18n>
 {
   "en": {
     "hello": "hello world!"
@@ -40,7 +65,7 @@
     "hello": "你好,世界！"
   }
 }
-</i18n>
+</i18n> -->
 
 <script>
 import { Tabbar, TabbarItem, Group, Cell, Box, XButton, Toast } from 'vux'

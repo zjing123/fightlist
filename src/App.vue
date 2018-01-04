@@ -93,7 +93,7 @@ export default {
       showMenu: false,
       menus: {
         'language.noop': '<span class="menu-title">Language</span>',
-        'zh-CN': '中文',
+        'zh_CN': '中文',
         'en': 'English'
       },
     }

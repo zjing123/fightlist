@@ -20,7 +20,7 @@ module.exports = {
     img: 'src',
     image: 'xlink:href'
   },
-  preLoaders: {
-           i18n: 'yaml-loader'
-  },
+  // preLoaders: {
+  //          i18n: 'yaml-loader'
+  // },
 }
