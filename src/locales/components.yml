@@ -1,8 +1,8 @@
 en:
   new game: "New Game"
-  game records: "Game Records"
+  game records: "<span class='title'>Game Records</span>"
   score: "Score"
 zh_CN:
   new game: "新游戏"
-  game records: "游戏记录"
+  game records: "<span class='title'>游戏记录</span>"
   score: 得分

@@ -21,7 +21,7 @@ module.exports = {
       name: 'i18n',
       vuxStaticReplace: false,
       staticReplace: false,
-      // extractToFiles: 'src/locales/components.yml',
+      extractToFiles: 'src/locales/components.yml',
       localeList: ['en', 'zh_CN']
     }
   ]

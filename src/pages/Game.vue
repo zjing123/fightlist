@@ -55,6 +55,7 @@ export default {
   computed: {
     ...mapState({
       state: state => state,
+      lang: state =>  state.locale
     })
   },
   mounted() {
@@ -63,6 +64,7 @@ export default {
   },
   created () {
     let params = {
+      lang: this.lang,
       type: 1,//单人游戏
     }
 

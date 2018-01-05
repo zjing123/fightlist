@@ -4,7 +4,7 @@
        <x-button type="primary" link="/newgame">{{ $t('new game') }}</x-button>
     </box>
     <div style="margin-top:30px;" v-if="!!fights">
-      <group title="<span class='title'>$('game records')</span>" class="game-info">
+      <group :title="$t('game records')" class="game-info">
         <cell is-link v-for="(fight, index) in fights" :key="fight.id" :link="{name: 'Result', params:{dataId: fight.id}}">
           <div slot="title">
             <div class="circular--landscape" >
@@ -79,7 +79,6 @@ export default {
     this.$http.get(BASE_URL + "fights", params).then((response) => {
       if(response.data.status == 'success') {
         that.fights = response.data.data.fights
-        that.fightings = response.data.data.fightings
       } else {
         that.$vux.toast.text(response.data.data.message, 'middle')
       }
