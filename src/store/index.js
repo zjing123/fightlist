@@ -18,14 +18,16 @@ const state = {
   usedIndexes:[], /**回答过的问题id*/
   currentResults:[],
   results: [],
+  rightResults: [],
   completed: false,
   questions: questions,
   questionGroup:null,
-  fight_id:null,
+  record_id:null,
   showBack: true,
   isLoading: false,
   direction: 'forward',
-  locale: 'zh_CN'
+  locale: 'zh_CN',
+  access_token: ''
 }
 
 export default new Vuex.Store({

@@ -16,10 +16,10 @@
           <panel :header="result.result.title"  :type="type" @on-img-error="onImgError"></panel>
           <scroller lock-x height="-380" ref="scroller" class="answer-content-no-radius">
              <div class="box2">
-               <div  v-if="result.result.answers.length">
+               <div  v-if="getAnswers(result.result.id).length">
                  <x-table :cell-bordered="false">
                   <tbody>
-                    <tr v-for="answer in result.result.answers">
+                    <tr v-for="answer in getAnswers(result.result.id)">
                       <td style="width:60%;text-align:left;padding-left:20%;">{{answer.title}}</td>
                       <td style="text-align:left;padding-left:10%;">
                         <span :class="[clasScoreNum, clasScoreNum + '-' + answer.score]">{{answer.score != 0 ? '+' : ''}}{{answer.score}}</span>
@@ -65,12 +65,14 @@
         <div v-if="result">
           <panel :header="result.result.title"  :type="type" @on-img-error="onImgError"></panel>
           <div class="box2" style="height:200px;padding:0 0 15px;overflow:scroll;-webkit-overflow-scrolling:touch;">
-            <div  v-if="result.result.right.length">
+            <div  v-if="result.result.answers.length">
               <x-table :cell-bordered="false">
                <tbody>
-                 <tr v-for="i in result.result.right">
-                   <td style="width:60%;text-align:left;padding-left:20%;">{{i.title}}</td>
-                   <td style="text-align:left;padding-left:10%;"><span class="score-num score-num-1">+{{i.score}}</span></td>
+                 <tr v-for="answer in result.result.answers">
+                   <td style="width:60%;text-align:left;padding-left:20%;">{{answer.title}}</td>
+                   <td style="text-align:left;padding-left:10%;">
+                     <span :class="[clasScoreNum, clasScoreNum + '-' + answer.score]">{{answer.score != 0 ? '+' : ''}}{{answer.score}}</span>
+                   </td>
                  </tr>
                </tbody>
              </x-table>
@@ -144,11 +146,15 @@ export default {
       window.localStorage.clear()
     },
     nextResult () {
-      this.result = this.getNextResult(this.result.result.id)
+      this.result = this.getNextRightResult(this.result.result.id)
     },
     prevResult () {
-      this.result = this.getPrevResult(this.result.result.id)
+      this.result = this.getPrevRightResult(this.result.result.id)
     },
+    getAnswers (id) {
+      //let id = this.result.result.id
+      return this.getResultAnswersByQuestionId(id)
+    }
   },
   computed: {
     ...mapState({
@@ -158,31 +164,23 @@ export default {
       questions: state => state.questions,
       time: state => state.time,
       percentage: state => state.percentage,
-      currentResults: state => state.currentResults
+      currentResults: state => state.currentResults,
+      access_token: state => state.access_token
     }),
     ...mapGetters([
-      'getFirstResult',
-      'getLastResult',
-      'getNextResult',
-      'getPrevResult',
+      'getFirstRightResult',
+      'getLastRightResult',
+      'getNextRightResult',
+      'getPrevRightResult',
       'getQuestionById',
+      'getResultAnswersByQuestionId',
       'isEnd'
     ]),
-    gameState () {
-      let len = this.currentResults.length;
-      if(len == 0) {
-        return 1;
-      } else if (len < 3) {
-        return 2;
-      } {
-        return 3;
-      }
-    },
     getScore () {
       var score = 0
-      for( let i in this.result.result.answers) {
-        if(this.result.result.answers[i].score !== undefined) {
-          score += parseInt(this.result.result.answers[i].score, 10);
+      for( let i in this.getAnswers) {
+        if(this.getAnswers[i].score !== undefined) {
+          score += parseInt(this.getAnswers[i].score, 10);
         }
       }
       return score;
@@ -193,26 +191,33 @@ export default {
     fetchData () {
       let id = this.$route.params.dataId | 0
       var that = this
-      this.$http.get(BASE_URL + "fights/" + id).then((response) => {
+      let config = {
+        headers: {
+          common: {
+            Authorization : this.access_token
+          }
+        }
+      }
+
+      this.$http.get(BASE_URL + "fights/" + id, config).then((response) => {
         if(response.data.status == 'success') {
           this.setResults(response.data.data)
-          this.result = this.getFirstResult
-          console.log(this.result)
+          this.result = this.getFirstRightResult
         } else {
           this.$vux.toast.text(response.data.data.message, 'middle')
         }
       }).catch(err => {
         this.$vux.toast.text('数据获取失败', 'middle')
       })
+
     }
   },
-  mounted() {
+  mounted () {
     this.$nextTick(()=>{
     })
   },
   created () {
     this.fetchData
-
   }
 }
 </script>

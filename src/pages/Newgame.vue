@@ -14,7 +14,10 @@
   ref="search"></search> -->
   <div>
     <group>
-      <cell title="单人游戏" is-link link="/game">
+      <cell :title="$t('Single player game')" is-link link="/game/1">
+        <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../assets/logo.png"/>
+      </cell>
+      <cell :title="$t('Multiplayer war')" is-link link="/game/2">
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="../assets/logo.png"/>
       </cell>
       <!-- <cell title="多人游戏" is-link link="/sticky">

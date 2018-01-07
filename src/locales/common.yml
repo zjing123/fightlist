@@ -1,0 +1,12 @@
+en:
+  not found data: "数据获取失败"
+  failed params: "failed params"
+  Synchronization data failure: "Synchronization data failure"
+  Single player game: "Single player game"
+  Multiplayer war: "Multiplayer fight"
+zh_CN:
+  not found data: "数据获取失败"
+  failed params: "can shu cuo wu"
+  Synchronization data failure: "同步数据失败"
+  Single player game: "单人游戏"
+  Multiplayer war: "多人对战"

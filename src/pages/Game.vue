@@ -16,6 +16,16 @@
   </div>
 </template>
 
+
+<i18n>
+en:
+  no more question: "New Game"
+  create game failed: "failed created game"
+zh_CN:
+  no more question: "no more 游戏"
+  create game failed: "failed created 游戏"
+</i18n>
+
 <script>
 import { Flexbox, FlexboxItem, XButton, Group, Panel, Scroller, XInput, XTable, Box, XProgress, XDialog, Blur  } from 'vux'
 import { mapState, mapActions, mapGetters, mapMutations} from 'vuex'
@@ -63,9 +73,11 @@ export default {
     })
   },
   created () {
+    let type = this.$route.params.type
+    console.log(type)
     let params = {
       lang: this.lang,
-      type: 1,//单人游戏
+      type: type,//游戏
     }
 
     let localStorage = window.localStorage
@@ -74,14 +86,14 @@ export default {
       this.$http.post(BASE_URL + "fights", params).then((response) => {
         if (response.data.status == 'success') {
           this.$store.commit('setQuestions', response.data.data)
-          this.$store.commit('setFightId', response.data.data)
+          this.$store.commit('setRecordId', response.data.data)
           that.isplay = true
         } else {
-          this.$vux.toast.text(response.data.message, 'middle')
+          this.$vux.toast.text(this.$t(response.data.message), 'middle')
         }
       }).catch(err => {
         console.log(err)
-        this.$vux.toast.text('数据获取失败', 'middle')
+        this.$vux.toast.text(this.$t('not found data'), 'middle')
       })
     } else {
       this.isplay = true

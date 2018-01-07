@@ -1,8 +1,16 @@
 en:
-  new game: "New Game"
-  game records: "<span class='title'>Game Records</span>"
-  score: "Score"
+  new game: New Game
+  game records: <span class='title'>Game Records</span>
+  score: Score
+  en: en
+  zh_CN: zh_CN
+  no more question: "New Game"
+  create game failed: "failed created game!"
 zh_CN:
-  new game: "新游戏"
-  game records: "<span class='title'>游戏记录</span>"
+  new game: 新游戏
+  game records: <span class='title'>游戏记录</span>
   score: 得分
+  en: en
+  zh_CN: zh_CN
+  no more question: "no more 游戏"
+  create game failed: "failed created 游戏!"

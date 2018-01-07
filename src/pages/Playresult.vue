@@ -34,7 +34,7 @@
             <flexbox>
               <flexbox-item>
                 <div class="flex-demo prev-game" v-show="!currentResult.isFirst">
-                  <a href="javascript:void(0);" @click.navite="getPrevResult">上一个</a>
+                  <a href="javascript:void(0);" @click.navite="getPrevRightResult">上一个</a>
                 </div>
             </flexbox-item>
               <flexbox-item>
@@ -44,7 +44,7 @@
                 </flexbox-item>
               <flexbox-item>
                 <div class="flex-demo next-game" v-show="!currentResult.isLast">
-                  <a href="javascript:void(0);" @click.navite="getNextResult">下一个</a>
+                  <a href="javascript:void(0);" @click.navite="getNextRightResult">下一个</a>
                 </div>
             </flexbox-item>
             </flexbox>
@@ -59,7 +59,7 @@
           <x-button type="primary" link="/play" @click.native="questionIndexIncrement">继续游戏</x-button>
         </div>
         <div style="margin-top:10px;" v-show="isEnd">
-          <x-button type="primary" link="/" @click.native="syncData">返回首页</x-button>
+          <x-button type="primary" @click.native="syncData">返回首页</x-button>
         </div>
       </div>
     </div>
@@ -142,14 +142,52 @@ export default {
       this.showAnswerBox = true
     },
     syncData() {
+      let params = {
+        lang: this.lang,
+        record_id: this.record_id,
+        result: this.currentResults,
+        score: this.totalScore(),
+        finished: 1
+      }
+      let config = {
+        headers: {
+          common: {
+            Authorization : this.access_token
+          }
+        }
+      }
+
       this.syncResult()
-      window.localStorage.clear()
+      this.$http.post(BASE_URL + "fightrecords", params, config).then((response) => {
+        if (response.data.status == 'success') {
+          if(response.data.data.finished == true) {
+            window.localStorage.clear()
+          } else {
+
+          }
+          this.$router.push({name: 'Home'})
+        } else {
+          this.$vux.toast.text(response.data.message, 'middle')
+        }
+      }).catch(err => {
+        this.$vux.toast.text(this.$('not found data'), 'middle')
+      })
     },
-    getNextResult () {
+    totalScore () {
+      var score = 0;
+      for( var result in this.currentResults) {
+        for( var answer in result.answers) {
+          score += parseInt(answer.score)
+        }
+      }
+
+      return score
+    },
+    getNextRightResult () {
       let result = this.getNextCurrentResult(this.currentResult.result.id)
       this.currentResult = result
     },
-    getPrevResult () {
+    getPrevRightResult () {
       let result = this.getPrevCurrentResult(this.currentResult.result.id)
       this.currentResult = result
     }
@@ -162,7 +200,9 @@ export default {
       questions: state => state.questions,
       time: state => state.time,
       percentage: state => state.percentage,
-      currentResults: state => state.currentResults
+      currentResults: state => state.currentResults,
+      record_id: state => state.record_id,
+      access_token: state => state.access_token
     }),
     ...mapGetters([
       'getLastCurrentResult',

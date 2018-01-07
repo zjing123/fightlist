@@ -38,10 +38,10 @@ export const setQuestions = (state, data) => {
   }
 }
 
-export const setFightId = (state, data) => {
-  if(!state.fight_id) {
-      state.fight_id = data.fight_id
-      localStorage.setItem('fight_id', state.fight_id)
+export const setRecordId = (state, data) => {
+  if(!state.record_id) {
+      state.record_id = data.record_id
+      localStorage.setItem('record_id', state.record_id)
   }
 }
 
@@ -63,7 +63,7 @@ export const start = state => {
 export const initParams = state => {
   state.time = config.time
   state.percentage = config.percentage
-  // state.fight_id = null
+  // state.record_id = null
   // state.questionGroup = null
 }
 
@@ -111,10 +111,17 @@ export const enableShowBack = state => {
 }
 
 export const setResults = (state, payload) => {
-  state.results = payload.results
+  if(payload.result != false) {
+    state.results = payload.results
+  }
+  state.rightResults = payload.rightResults
 }
 
 export const setLocale = (state, payload) => {
   state.locale = payload.locale
   localStorage.setItem('locale', state.locale)
+}
+
+export const setAccessToken = (state, payload) => {
+  state.access_token = payload.access_token
 }

@@ -28,12 +28,13 @@ store.dispatch('initData')
 Vue.use(vuexI18n.plugin, store)
 Vue.i18n.set(store.state.locale)
 
+const commonLocales = require('json-loader!yaml-loader!./locales/common.yml')
 const vuxLocales = require('json-loader!yaml-loader!./locales/all.yml')
 const componentsLocales = require('json-loader!yaml-loader!./locales/components.yml')
 
 const finalLocales = {
-  'en': objectAssign(vuxLocales['en'], componentsLocales['en']),
-  'zh_CN': objectAssign(vuxLocales['zh_CN'],componentsLocales['zh_CN'])
+  'en': objectAssign(commonLocales['en'], vuxLocales['en'], componentsLocales['en']),
+  'zh_CN': objectAssign(commonLocales['zh_CN'], vuxLocales['zh_CN'],componentsLocales['zh_CN'])
 }
 
 for (let i in finalLocales) {
@@ -41,7 +42,14 @@ for (let i in finalLocales) {
 }
 /*vuex-i18n end*/
 
-AjaxPlugin.$http.defaults.headers.common['Authorization'] = 'Bearer ' + config.access_token
+if(sessionStorage.getItem('access_token')) {
+  //AjaxPlugin.$http.defaults.headers.common['Authorization'] = 'Bearer ' + sessionStorage.getItem('access_token')
+  store.commit('setAccessToken', {access_token: 'Bearer ' + sessionStorage.getItem('access_token')})
+} else {
+  //store.commit('setAccessToken', {access_token: 'Bearer ' + config.users.test})
+  //AjaxPlugin.$http.defaults.headers.common['Authorization'] = 'Bearer ' + config.token.test
+}
+
 Vue.use(AjaxPlugin)
 Vue.use(ToastPlugin)
 

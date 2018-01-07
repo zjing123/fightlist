@@ -76,46 +76,53 @@ export const isEnd = state => {
   return state.questions.length === state.currentResults.length ? true : false;
 }
 
-export const getFirstResult = state => {
-  let isLast = (0 == state.results.length - 1)
-  return {result: _.first(state.results), isFirst: true, isLast: isLast}
+export const getFirstRightResult = state => {
+  let isLast = (0 == state.rightResults.length - 1)
+  return {result: _.first(state.rightResults), isFirst: true, isLast: isLast}
 }
 
-export const getLastResult = state => {
-  let isFirst = (0 == state.results.length - 1)
-  return {result: _.last(state.results), isFirst: isFirst, isLast: true}
+export const getLastRightResult = state => {
+  let isFirst = (0 == state.rightResults.length - 1)
+  return {result: _.last(state.rightResults), isFirst: isFirst, isLast: true}
 }
 
-export const getNextResult = state => (questionId) => {
+export const getNextRightResult = state => (questionId) => {
   let nextResult = null
-  let index = _.findIndex(state.results, function(result){
+  let index = _.findIndex(state.rightResults, function(result){
     return result.id == questionId
   })
 
   let nextIndex = index + 1
-  if(nextIndex <= state.results.length - 1) {
-    nextResult = state.results[nextIndex]
+  if(nextIndex <= state.rightResults.length - 1) {
+    nextResult = state.rightResults[nextIndex]
   }
 
   let isFirst = (nextIndex == 0)
-  let isLast = (nextIndex == state.results.length - 1)
+  let isLast = (nextIndex == state.rightResults.length - 1)
 
   return {result: nextResult, isLast:isLast, isFirst: isFirst}
 }
 
-export const getPrevResult = state => (questionId) => {
+export const getPrevRightResult = state => (questionId) => {
   let prevResult = null
-  let index = _.findIndex(state.results, function(result) {
+  let index = _.findIndex(state.rightResults, function(result) {
     return result.id == questionId
   })
 
   let prevIndex = index -1
   if(prevIndex >= 0) {
-    prevResult = state.results[prevIndex]
+    prevResult = state.rightResults[prevIndex]
   }
 
   let isFirst = (prevIndex == 0)
-  let isLast = (prevIndex == state.results.length -1)
-  console.log(questionId, prevResult)
+  let isLast = (prevIndex == state.rightResults.length -1)
   return {result: prevResult, isFirst: isFirst, isLast: isLast }
+}
+
+export const getResultAnswersByQuestionId = state => (questionId) => {
+  let answers =  _.result(_.find(state.results, function(result) {
+    return result.id == questionId;
+  }), 'answers')
+
+  return answers
 }

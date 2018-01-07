@@ -135,7 +135,7 @@ export default {
       state: state => state,
       time: state => state.time,
       percentage: state => state.percentage,
-      fight_id: state => state.fight_id,
+      record_id: state => state.record_id,
       lang: state => state.locale
     }),
     ...mapGetters({
@@ -160,24 +160,6 @@ export default {
         this.result.title = this.question.title
         this.pushCurrentResult(this.result)
         this.pushUsedIndex(questionId)
-        let params = {
-          lang: this.lang,
-          fight_id: this.fight_id,
-          question_id: questionId,
-          answers: this.result.answers,
-          finished: 1
-        }
-
-        this.$http.post(BASE_URL + "fightrecords", params).then((response) => {
-          if (response.data.status == 'success') {
-
-          } else {
-            this.$vux.toast.text(response.data.message, 'middle')
-          }
-        }).catch(err => {
-          this.$vux.toast.text('数据获取失败', 'middle')
-        })
-
         this.$router.push({name: 'Playresult'})
       }
     }

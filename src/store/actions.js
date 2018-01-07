@@ -22,8 +22,8 @@ export const initData = ({ commit, state }) => {
     state.currentResults = JSON.parse(windowLocalStorage.getItem('currentResults'))
   }
 
-  if(windowLocalStorage.getItem('fight_id')) {
-    state.fight_id = windowLocalStorage.getItem('fight_id')
+  if(windowLocalStorage.getItem('record_id')) {
+    state.record_id = windowLocalStorage.getItem('record_id')
   }
 
   if(windowLocalStorage.getItem('questionGroup')){

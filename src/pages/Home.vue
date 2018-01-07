@@ -18,6 +18,28 @@
         </cell>
       </group>
     </div>
+    <div>
+      <x-dialog v-model="showToast" class="dialog-demo">
+        <p style="padding:15px;">
+          select a user
+        </p>
+        <div style="padding:15px;" v-for="(key, val) in users">
+          <x-button @click.native="selectUser(key)" type="primary">{{ val }}</x-button>
+        </div>
+        <!-- <div style="padding:15px;">
+          <x-button @click.native="doShowToast" type="primary">show toast</x-button>
+        </div>
+        <div style="padding:15px;">
+          <x-button @click.native="doShowToast" type="primary">show toast</x-button>
+        </div>
+        <div style="padding:15px;">
+          <x-button @click.native="doShowToast" type="primary">show toast</x-button>
+        </div>
+        <div style="padding:15px;">
+          <x-button @click.native="doShowToast" type="primary">show toast</x-button>
+        </div> -->
+      </x-dialog>
+    </div>
   </div>
 </template>
 
@@ -33,8 +55,8 @@ zh_CN:
 </i18n>
 
 <script>
-import { Tabbar, TabbarItem, Group, Cell, Box, XButton, Toast } from 'vux'
-import { mapState, mapGetters } from 'vuex'
+import { Tabbar, TabbarItem, Group, Cell, Box, XButton, Toast, XDialog } from 'vux'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 import config from '@/config/base.config'
 
 export default {
@@ -44,47 +66,65 @@ export default {
     Group,
     Cell,
     Box,
-    XButton
+    XButton,
+    XDialog
   },
   methods: {
+    ...mapMutations([
+      'setAccessToken'
+    ]),
     change (value) {
       console.log('change:', value)
     },
-    processButton001 () {
-      this.submit001 = 'processing'
-      this.disable001 = true
+    selectUser ( val ) {
+      this.setAccessToken({access_token: 'Bearer ' + val})
+      this.showToast = false
+      this.fetchData()
+    },
+    fetchData () {
+      let that = this
+      let params = {
+        lang: this.lang
+      }
+      let config = {
+        headers: {
+          common: {
+            Authorization : this.access_token
+          }
+        }
+      }
+      if(this.access_token) {
+        this.$http.get(BASE_URL + "fights", config).then((response) => {
+          if(response.data.status == 'success') {
+            that.fights = response.data.data.fights
+          } else {
+            that.$vux.toast.text(response.data.data.message, 'middle')
+          }
+        }).catch(err => {
+          that.$vux.toast.text('数据获取失败', 'middle')
+        })
+      }
     }
   },
   computed: {
     ...mapState({
-      lang: state => state.locale
+      lang: state => state.locale,
+      access_token : state => state.access_token
     }),
     ...mapGetters([
       'getQuestion'
-    ])
+    ]),
   },
   data () {
     return {
-      submit001: 'click me',
-      disable001: false,
       fights: null,
-      fightings: null
+      fightings: null,
+      showToast: true,
+      users: config.users
     }
   },
   created () {
-    let that = this
-    let params = {
-      lang: this.lang
-    }
-    this.$http.get(BASE_URL + "fights", params).then((response) => {
-      if(response.data.status == 'success') {
-        that.fights = response.data.data.fights
-      } else {
-        that.$vux.toast.text(response.data.data.message, 'middle')
-      }
-    }).catch(err => {
-      that.$vux.toast.text('数据获取失败', 'middle')
-    })
+    this.fetchData()
   }
 }
 </script>

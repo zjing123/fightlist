@@ -21,7 +21,7 @@ export default new Router({
     component: NewGame
   }, {
     name: 'Game',
-    path: '/game',
+    path: '/game/:type',
     component: Game
   }, {
     name: 'Play',
