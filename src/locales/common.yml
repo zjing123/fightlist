@@ -1,12 +1,24 @@
 en:
-  not found data: "数据获取失败"
-  failed params: "failed params"
+  not found data: "Data acquisition failure"
+  failed params: "Parameter error"
   Synchronization data failure: "Synchronization data failure"
   Single player game: "Single player game"
   Multiplayer war: "Multiplayer fight"
 zh_CN:
   not found data: "数据获取失败"
-  failed params: "can shu cuo wu"
+  failed params: "参数错误"
   Synchronization data failure: "同步数据失败"
   Single player game: "单人游戏"
   Multiplayer war: "多人对战"
+zh_TW:
+  not found data: "數據獲取失敗"
+  failed params: "參數錯誤"
+  Synchronization data failure: "同步數據失敗"
+  Single player game: "單人遊戲"
+  Multiplayer war: "多人對戰"
+zh_HK:
+  not found data: "數據獲取失敗"
+  failed params: "參數錯誤"
+  Synchronization data failure: "同步數據失敗"
+  Single player game: "單人遊戲"
+  Multiplayer war: "多人對戰"

@@ -36,7 +36,7 @@
                 :autofocus="autofocus"
                 spellcheck="false"
                 type="text"
-                placeholder="答案..."
+                :placeholder="$t('placeholder')"
                 class="weui-input"
                 @focus="focusHandle"
                 @blur="blurHandle"
@@ -46,7 +46,7 @@
                 >
               </div>
               <div class="weui-cell__ft">
-                <x-button type="primary" mini @click.native="submitHandle" v-show="showButton">确认</x-button>
+                <x-button type="primary" mini @click.native="submitHandle" v-show="showButton">{{ $t('enter')}}</x-button>
               </div>
             </div>
           </group>
@@ -55,6 +55,15 @@
     </div>
   </div>
 </template>
+
+<i18n>
+en:
+  placeholder: "answer..."
+  enter: "Enter"
+zh_CN:
+  placeholder: "答案..."
+  enter: "确认"
+</i18n>
 
 <script>
 import { XButton, Group, Panel, Scroller, XInput, XTable, Box  } from 'vux'

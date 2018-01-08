@@ -24,6 +24,7 @@ const state = {
   questionGroup:null,
   record_id:null,
   showBack: true,
+  showMore: true,
   isLoading: false,
   direction: 'forward',
   locale: 'zh_CN',

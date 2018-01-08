@@ -34,29 +34,26 @@
             <flexbox>
               <flexbox-item>
                 <div class="flex-demo prev-game" v-show="!result.isFirst">
-                  <a href="javascript:void(0);" @click.navite="prevResult">上一个</a>
+                  <a href="javascript:void(0);" @click.navite="prevResult">{{ $t('prev')}}</a>
                 </div>
             </flexbox-item>
               <flexbox-item>
                 <div class="flex-demo">
-                  <strong>得分： {{ getScore }}</strong>
+                  <strong>{{ $t('score')}}： {{ getScore }}</strong>
                 </div>
                 </flexbox-item>
               <flexbox-item>
                 <div class="flex-demo next-game" v-show="!result.isLast">
-                  <a href="javascript:void(0);" @click.navite="nextResult">下一个</a>
+                  <a href="javascript:void(0);" @click.navite="nextResult">{{ $t('next')}}</a>
                 </div>
             </flexbox-item>
             </flexbox>
           </div>
           <div style="height:40px;">
             <box>
-              <x-button class="show-answer-btn" type="primary" @click.native="showAnswer" >查看答案</x-button>
+              <x-button class="show-answer-btn" type="primary" @click.native="showAnswer" >{{ $t('check answers')}}</x-button>
             </box>
           </div>
-        </div>
-        <div style="margin-top:10px;" v-show="false">
-          <x-button type="primary" link="/play" @click.native="questionIndexIncrement">继续游戏</x-button>
         </div>
       </div>
     </div>
@@ -86,6 +83,19 @@
     </div>
   </div>
 </template>
+
+<i18n>
+en:
+  prev: "Previous"
+  next: "Next"
+  score: "Score"
+  check answers: "Check Answers"
+zh_CN:
+  prev: "上一个"
+  next: "下一个"
+  score: "得分"
+  check answers: "查看答案"
+</i18n>
 
 <script>
 import { Flexbox, FlexboxItem, XButton, Group, Panel, Scroller, XInput, XTable, Box, XProgress, XDialog, Blur  } from 'vux'

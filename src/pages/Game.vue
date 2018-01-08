@@ -11,7 +11,7 @@
       </blur>
     </div>
     <div class="play-button">
-      <x-button type="primary" link="/play" v-show="isplay">开始游戏</x-button>
+      <x-button type="primary" link="/play" v-show="isplay">{{ $t('start the game')}}</x-button>
     </div>
   </div>
 </template>
@@ -19,11 +19,13 @@
 
 <i18n>
 en:
-  no more question: "New Game"
-  create game failed: "failed created game"
+  no more question: "No more games"
+  create game failed: "Failed created game"
+  start the game: "PLAY"
 zh_CN:
-  no more question: "no more 游戏"
-  create game failed: "failed created 游戏"
+  no more question: "没有更多游戏了"
+  create game failed: "游戏创建失败"
+  start the game: '开始游戏'
 </i18n>
 
 <script>
@@ -65,7 +67,8 @@ export default {
   computed: {
     ...mapState({
       state: state => state,
-      lang: state =>  state.locale
+      lang: state =>  state.locale,
+      access_token: state => state.access_token
     })
   },
   mounted() {
@@ -74,30 +77,36 @@ export default {
   },
   created () {
     let type = this.$route.params.type
-    console.log(type)
     let params = {
       lang: this.lang,
       type: type,//游戏
     }
-
-    let localStorage = window.localStorage
-    if(!localStorage.getItem('questions')) {
-      var that = this
-      this.$http.post(BASE_URL + "fights", params).then((response) => {
-        if (response.data.status == 'success') {
-          this.$store.commit('setQuestions', response.data.data)
-          this.$store.commit('setRecordId', response.data.data)
-          that.isplay = true
-        } else {
-          this.$vux.toast.text(this.$t(response.data.message), 'middle')
+    let config = {
+      headers: {
+        common: {
+          Authorization : this.access_token
         }
-      }).catch(err => {
-        console.log(err)
-        this.$vux.toast.text(this.$t('not found data'), 'middle')
-      })
-    } else {
-      this.isplay = true
+      }
     }
+
+    var that = this
+    this.$http.post(BASE_URL + "fights", params, config).then((response) => {
+      if (response.data.status == 'success') {
+        this.$store.commit('setQuestions', response.data.data)
+        this.$store.commit('setRecordId', response.data.data)
+        that.isplay = true
+      } else {
+        this.$vux.toast.text(this.$t(response.data.message), 'middle')
+      }
+    }).catch(err => {
+      this.$vux.toast.text(this.$t('not found data'), 'middle')
+    })
+
+    // let localStorage = window.localStorage
+    // if(!localStorage.getItem('questions')) {
+    // } else {
+    //   this.isplay = true
+    // }
   }
 }
 </script>

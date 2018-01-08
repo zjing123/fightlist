@@ -110,6 +110,14 @@ export const enableShowBack = state => {
   state.showBack = true
 }
 
+export const disableShowMore = state => {
+  state.showMore = false
+}
+
+export const enableShowMore = state => {
+  state.showMore = true
+}
+
 export const setResults = (state, payload) => {
   if(payload.result != false) {
     state.results = payload.results
@@ -124,4 +132,5 @@ export const setLocale = (state, payload) => {
 
 export const setAccessToken = (state, payload) => {
   state.access_token = payload.access_token
+  state.username = payload.username
 }

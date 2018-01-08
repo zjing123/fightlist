@@ -39,7 +39,7 @@
             </flexbox-item>
               <flexbox-item>
                 <div class="flex-demo">
-                  <strong>得分： {{ getScore }}</strong>
+                  <strong>{{ $t('score') }}： {{ getScore }}</strong>
                 </div>
                 </flexbox-item>
               <flexbox-item>
@@ -51,15 +51,15 @@
           </div>
           <div style="height:40px;">
             <box>
-              <x-button class="show-answer-btn" type="primary" @click.native="showAnswer" >查看答案</x-button>
+              <x-button class="show-answer-btn" type="primary" @click.native="showAnswer" >{{ $t('check answers') }}</x-button>
             </box>
           </div>
         </div>
         <div style="margin-top:10px;" v-show="!isEnd">
-          <x-button type="primary" link="/play" @click.native="questionIndexIncrement">继续游戏</x-button>
+          <x-button type="primary" link="/play" @click.native="questionIndexIncrement">{{ $t('continue the game') }}</x-button>
         </div>
         <div style="margin-top:10px;" v-show="isEnd">
-          <x-button type="primary" @click.native="syncData">返回首页</x-button>
+          <x-button type="primary" @click.native="syncData">{{ $t('return home page') }}</x-button>
         </div>
       </div>
     </div>
@@ -87,6 +87,23 @@
     </div>
   </div>
 </template>
+
+<i18n>
+en:
+  prev: "Previous"
+  next: "Next"
+  score: "Score"
+  check answers: "Check Answers"
+  return home page: "Home"
+  continue the game: "Continue the game"
+zh_CN:
+  prev: "上一个"
+  next: "下一个"
+  score: "得分"
+  check answers: "查看答案"
+  return home page: "返回首页"
+  continue the game: "继续游戏"
+</i18n>
 
 <script>
 import { Flexbox, FlexboxItem, XButton, Group, Panel, Scroller, XInput, XTable, Box, XProgress, XDialog, Blur  } from 'vux'
@@ -141,6 +158,28 @@ export default {
     showAnswer () {
       this.showAnswerBox = true
     },
+    clearStorage () {
+      var windowLocalStorage = window.localStorage
+      if(windowLocalStorage.getItem('currentResults')) {
+        windowLocalStorage.removeItem('currentResults')
+      }
+
+      if(windowLocalStorage.getItem('record_id')) {
+        state.record_id = windowLocalStorage.removeItem('record_id')
+      }
+
+      if(windowLocalStorage.getItem('questionGroup')){
+        state.questionGroup = windowLocalStorage.removeItem('questionGroup')
+      }
+
+      if(windowLocalStorage.getItem('questions')) {
+        windowLocalStorage.removeItem('questions')
+      }
+
+      if(windowLocalStorage.getItem('usedIndexes')) {
+        windowLocalStorage.removeItem('usedIndexes')
+      }
+    },
     syncData() {
       let params = {
         lang: this.lang,
@@ -161,16 +200,17 @@ export default {
       this.$http.post(BASE_URL + "fightrecords", params, config).then((response) => {
         if (response.data.status == 'success') {
           if(response.data.data.finished == true) {
-            window.localStorage.clear()
+            this.clearStorage()
           } else {
-
           }
           this.$router.push({name: 'Home'})
         } else {
           this.$vux.toast.text(response.data.message, 'middle')
+          this.$router.push({name: 'Home'})
         }
       }).catch(err => {
-        this.$vux.toast.text(this.$('not found data'), 'middle')
+        this.$router.push({name: 'Home'})
+        this.$vux.toast.text(this.$t('not found data'), 'middle')
       })
     },
     totalScore () {

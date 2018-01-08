@@ -3,16 +3,49 @@
     <box gap="10px 10px">
        <x-button type="primary" link="/newgame">{{ $t('new game') }}</x-button>
     </box>
-    <div style="margin-top:30px;" v-if="!!fights">
-      <group :title="$t('game records')" class="game-info">
-        <cell is-link v-for="(fight, index) in fights" :key="fight.id" :link="{name: 'Result', params:{dataId: fight.id}}">
+    <div style="margin-top:30px;" v-if="fights != null">
+      <p style="padding-left:15px;color:#fff;" v-html="$t('game records')"></p>
+      <group :title="$t('Single player game') + ':'" v-if="getFightsByType(1) != null" class="game-info">
+        <cell is-link v-for="(fight, index) in getFightsByType(1)" :key="fight.id" :link="{name: 'Result', params:{dataId: fight.id}}">
           <div slot="title">
             <div class="circular--landscape" >
               <img src="../assets/user.jpg"/>
             </div>
             <div class="game-info-desc">
               <p class="title">{{ fight.user.name }}</p>
-              <p class="desc">{{ $t('score') }}：<span>{{ fight.score }}</span></p>
+              <p class="desc">
+                {{ $t('score') }}： <span>{{ fight.score }}</span>
+              </p>
+            </div>
+          </div>
+        </cell>
+      </group>
+      <group :title="$t('Multiplayer war') + ':'" v-if="getFightsByType(2) != null" class="game-info">
+        <cell is-link v-for="(fight, index) in getFightsByType(2)" :key="fight.id" :link="{name: 'Result', params:{dataId: fight.id}}">
+          <div slot="title">
+            <div class="circular--landscape" >
+              <img src="../assets/user.jpg"/>
+            </div>
+            <div class="game-info-desc">
+              <p class="title">{{ fight.user.name }}</p>
+              <p class="desc">
+                {{ $t('score') }}：<span>{{ fight.score }}</span>
+              </p>
+            </div>
+          </div>
+        </cell>
+      </group>
+      <group :title="$t('unfinished game') + ':'" v-if="getUnfinishedFight() != null" class="game-info">
+        <cell is-link v-for="(fight, index) in getUnfinishedFight()" :key="fight.id" :link="{name: 'Result', params:{dataId: fight.id}}">
+          <div slot="title">
+            <div class="circular--landscape" >
+              <img src="../assets/user.jpg"/>
+            </div>
+            <div class="game-info-desc">
+              <p class="title">{{ fight.user.name }}</p>
+              <p class="desc">
+                {{ $t('score') }}：<span>{{ fight.score }}</span>
+              </p>
             </div>
           </div>
         </cell>
@@ -24,20 +57,8 @@
           select a user
         </p>
         <div style="padding:15px;" v-for="(key, val) in users">
-          <x-button @click.native="selectUser(key)" type="primary">{{ val }}</x-button>
+          <x-button @click.native="selectUser(key, val)" type="primary">{{ val }}</x-button>
         </div>
-        <!-- <div style="padding:15px;">
-          <x-button @click.native="doShowToast" type="primary">show toast</x-button>
-        </div>
-        <div style="padding:15px;">
-          <x-button @click.native="doShowToast" type="primary">show toast</x-button>
-        </div>
-        <div style="padding:15px;">
-          <x-button @click.native="doShowToast" type="primary">show toast</x-button>
-        </div>
-        <div style="padding:15px;">
-          <x-button @click.native="doShowToast" type="primary">show toast</x-button>
-        </div> -->
       </x-dialog>
     </div>
   </div>
@@ -48,16 +69,21 @@ en:
   new game: "New Game"
   game records: "Game Records"
   score: "Score"
+  game type: "Game type"
+  unfinished game: "Unfinished games"
 zh_CN:
   new game: "新游戏"
   game records: "游戏记录"
   score: 得分
+  game type: "游戏类型"
+  unfinished game: "未完成游戏"
 </i18n>
 
 <script>
 import { Tabbar, TabbarItem, Group, Cell, Box, XButton, Toast, XDialog } from 'vux'
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import config from '@/config/base.config'
+import _ from 'lodash'
 
 export default {
   components: {
@@ -76,8 +102,8 @@ export default {
     change (value) {
       console.log('change:', value)
     },
-    selectUser ( val ) {
-      this.setAccessToken({access_token: 'Bearer ' + val})
+    selectUser ( token, username ) {
+      this.setAccessToken({access_token: 'Bearer ' + token, username: username})
       this.showToast = false
       this.fetchData()
     },
@@ -98,12 +124,42 @@ export default {
           if(response.data.status == 'success') {
             that.fights = response.data.data.fights
           } else {
-            that.$vux.toast.text(response.data.data.message, 'middle')
+            that.$vux.toast.text(this.$t('response.data.data.message'), 'middle')
           }
         }).catch(err => {
-          that.$vux.toast.text('数据获取失败', 'middle')
+          that.$vux.toast.text(this.$t('not found data'), 'middle')
         })
       }
+    },
+    getFightsByType ( type ) {
+      if(this.fights === null) {
+        return null
+      }
+
+      let fights =  this.fights.filter(function (fight) {
+        return fight.fight.type == type && fight.finished == 1
+      })
+
+      if(_.isEmpty(fights)) {
+        return null
+      }
+
+      return fights
+    },
+    getUnfinishedFight () {
+      if(this.fights === null) {
+        return null
+      }
+
+      let fights =  this.fights.filter(function (fight) {
+        return fight.finished == 0
+      })
+
+      if(_.isEmpty(fights)) {
+        return null
+      }
+
+      return fights
     }
   },
   computed: {
@@ -125,6 +181,9 @@ export default {
   },
   created () {
     this.fetchData()
+    if(this.access_token != '') {
+      this.showToast = false
+    }
   }
 }
 </script>

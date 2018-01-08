@@ -34,7 +34,9 @@ const componentsLocales = require('json-loader!yaml-loader!./locales/components.
 
 const finalLocales = {
   'en': objectAssign(commonLocales['en'], vuxLocales['en'], componentsLocales['en']),
-  'zh_CN': objectAssign(commonLocales['zh_CN'], vuxLocales['zh_CN'],componentsLocales['zh_CN'])
+  'zh_CN': objectAssign(commonLocales['zh_CN'], vuxLocales['zh_CN'],componentsLocales['zh_CN']),
+  'zh_TW': objectAssign(commonLocales['zh_TW'], vuxLocales['zh_TW'], componentsLocales['zh_TW']),
+  'zh_HK': objectAssign(commonLocales['zh_HK'], vuxLocales['zh_HK'], componentsLocales['zh_HK']),
 }
 
 for (let i in finalLocales) {
@@ -61,10 +63,16 @@ router.afterEach((to, from) => {
     store.commit('initParams')
   }
 
-  if(to.path == '/') {
+  if(to.path == '/' || to.path == '/playresult') {
     store.commit('disableShowBack')
   } else {
     store.commit('enableShowBack')
+  }
+
+  if(to.path == '/') {
+    store.commit('enableShowMore')
+  } else {
+    store.commit('disableShowMore')
   }
 
   store.commit('setTitle', getRouterTitle(to.name))

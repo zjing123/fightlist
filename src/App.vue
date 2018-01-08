@@ -57,6 +57,7 @@ export default {
       state: state => state,
       title: state => state.title,
       showBack: state => state.showBack,
+      showMore: state => state.showMore,
       direction: state => state.direction
     }),
     headerTransition () {
@@ -74,7 +75,7 @@ export default {
     },
     rightOptions () {
       return {
-        showMore: true
+        showMore: this.showMore
       }
     }
   },
@@ -98,7 +99,9 @@ export default {
       menus: {
         'language.noop': '<span class="menu-title">Language</span>',
         'zh_CN': '中文',
-        'en': 'English'
+        'en': 'English',
+        'zh_HK': '中文繁体(香港)',
+        'zh_TW': '中文繁体(臺灣)'
       },
     }
   },

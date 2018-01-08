@@ -2,15 +2,67 @@ en:
   new game: New Game
   game records: <span class='title'>Game Records</span>
   score: Score
+  no more question: no more games
+  create game failed: Failed created game!
+  prev: Previous
+  next: Next
+  check answers: Check Answers
+  return home page: "Home"
+  continue the game: "Continue"
+  start the game: "PLAY"
+  unfinished game: "Unfinished games"
+  placeholder: "answer..."
+  enter: "Enter"
   en: en
   zh_CN: zh_CN
-  no more question: "New Game"
-  create game failed: "failed created game!"
 zh_CN:
   new game: 新游戏
   game records: <span class='title'>游戏记录</span>
   score: 得分
+  no more question: 没有更多游戏了!
+  create game failed: 游戏创建失败!
+  prev: 上一个
+  next: 下一个
+  check answers: 查看答案
+  return home page: "返回首页"
+  continue the game: "继续游戏"
+  start the game: '开始游戏'
+  unfinished game: "未完成游戏"
+  placeholder: "答案..."
+  enter: "确认"
   en: en
   zh_CN: zh_CN
-  no more question: "no more 游戏"
-  create game failed: "failed created 游戏!"
+zh_TW:
+  new game: 新遊戲
+  game records: <span class='title'>遊戲記錄</span>
+  score: 得分
+  no more question: 沒有更多遊戲了！
+  create game failed: 遊戲創建失敗！
+  prev: 上一個
+  next: 下一個
+  check answers: 查看答案
+  return home page: "返回首頁"
+  continue the game: "繼續遊戲"
+  start the game: 開始遊戲
+  unfinished game: 未完成遊戲
+  placeholder: "答案…"
+  enter: "確認"
+  en: en
+  zh_CN: zh_CN
+zh_HK:
+  new game: 新遊戲
+  game records: <span class='title'>遊戲記錄</span>
+  score: 得分
+  no more question: 沒有更多遊戲了！
+  create game failed: 遊戲創建失敗！
+  prev: 上一個
+  next: 下一個
+  check answers: 查看答案
+  return home page: "返回首頁"
+  continue the game: "繼續遊戲"
+  start the game: '開始遊戲'
+  unfinished game: "未完成遊戲"
+  placeholder: "答案…"
+  enter: "確認"
+  en: en
+  zh_CN: zh_CN

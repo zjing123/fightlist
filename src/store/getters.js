@@ -21,10 +21,15 @@ export const getQuestionById = state => (id) => {
 export const getScore = state => (questionId, answerTitle) => {
   let question = state.questions.find(question => question.id === questionId)
   let score =  _.result(_.find(question.answers, function(answer) {
+    if(state.locale == 'en') {
+      return answer.title.toLowerCase() == answerTitle.toLowerCase()
+    }
     return answer.title === answerTitle
   }), 'score')
 
-  console.log(questionId, answerTitle, score)
+  // console.log(questionId, answerTitle, score, question, _.find(question.answers, function(answer) {
+  //   return answer.title == answerTitle
+  // }))
   return score === undefined ? 0 : score
 }
 

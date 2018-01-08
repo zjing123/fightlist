@@ -22,7 +22,7 @@ module.exports = {
       vuxStaticReplace: false,
       staticReplace: false,
       extractToFiles: 'src/locales/components.yml',
-      localeList: ['en', 'zh_CN']
+      localeList: ['en', 'zh_CN', 'zh_TW', 'zh_HK']
     }
   ]
 }
