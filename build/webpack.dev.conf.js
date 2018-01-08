@@ -38,7 +38,8 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': require('../config/dev.env'),
-      'BASE_URL': '"http://test.laravel-voyager.com/api/"'
+      //'BASE_URL': '"http://test.laravel-voyager.com/api/"'
+      'BASE_URL': 'BASE_URL': '"http://47.90.35.157/api/"'
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
