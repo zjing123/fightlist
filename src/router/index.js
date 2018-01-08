@@ -7,6 +7,8 @@ import Play from '@/pages/Play'
 import Playresult from '@/pages/Playresult'
 import Result from '@/pages/Result'
 import Test from '@/pages/Test'
+import Login from '@/pages/Login'
+import Register from '@/pages/Register'
 
 Vue.use(Router)
 
@@ -39,5 +41,13 @@ export default new Router({
     name: 'Test',
     path: '/test',
     component: Test
+  }, {
+    name: 'Login',
+    path: '/login',
+    component: Login
+  }, {
+    name: 'Register',
+    path: '/register',
+    component: Register
   }]
 })

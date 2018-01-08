@@ -22,7 +22,7 @@
       </transition>
 
 
-      <tabbar slot="bottom" v-show="path === '/'">
+      <tabbar slot="bottom" v-if="path === '/'">
             <tabbar-item  v-for="(tabbar, index) in tabbars" v-if="tabbar.show" :selected="tabbar.selected" :link="tabbar.link" :key="index">
               <img slot="icon" :src="tabbar.icon">
               <span slot="label">{{ tabbar.title }}</span>
