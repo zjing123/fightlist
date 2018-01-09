@@ -9,6 +9,7 @@ export const sendLogin = (data) => http.post('/fights', {
 
 export const sendRegister = (data) => http.post('/register', {
     name: data.username,
+    email: data.email,
     password: data.password,
-    email: data.email
+    password_confirmation: data.password_confirmation,
 })

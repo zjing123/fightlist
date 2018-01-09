@@ -1,20 +1,25 @@
 <template>
   <div>
     <group>
-      <x-input placeholder="账号" v-model="username" required show-clear></x-input>
-      <x-input placeholder="邮箱" is-type="email" v-model="email" required show-clear></x-input>
-      <x-input placeholder="密码" type="password" :min="6" v-model="password" required show-clear></x-input>
-      <x-input placeholder="确认密码" type="password" :min="6" v-model="password_confirm" required show-clear></x-input>
+      <x-input placeholder="用户名" v-model="user.username" required show-clear></x-input>
+      <x-input placeholder="邮箱" is-type="email" v-model="user.email" required show-clear></x-input>
+      <x-input placeholder="密码" type="password" :min="6" v-model="user.password" required show-clear></x-input>
+      <x-input placeholder="确认密码" type="password" :min="6" v-model="user.password_confirmation" required show-clear></x-input>
     </group>
     <box gap="10px 10px">
       <x-button type="primary" @click.native="signIn">注册</x-button>
     </box>
+    <div v-transfer-dom>
+      <loading :show="isLoading" :text="loadingText"></loading>
+    </div>
     <router-link to="/login" class="to_register" >已注册？去登录</router-link>
   </div>
 </template>
 
 <script>
-    import { Group, Cell, XHeader, XInput, XButton, Box, Toast } from 'vux'
+    import { Group, Cell, XHeader, XInput, XButton, Box, Toast, Loading, TransferDomDirective as TransferDom } from 'vux'
+    import { mapState, mapMutations } from 'vuex'
+    import _ from 'lodash'
     import { sendRegister, getFights } from '../api/server'
 
     export default {
@@ -25,69 +30,90 @@
             XInput,
             XButton,
             Box,
-            Toast
+            Toast,
+            Loading
+        },
+        directives: {
+            TransferDom
         },
         data () {
             return {
-                username: "",
-                email: "",
-                password: "",
-                password_confirm: "",
-                isRegister: false
+                user: {
+                    username: "liuchuan5",
+                    email: "liuchuan5@admin.com",
+                    password: "liuchuan5",
+                    password_confirmation: "liuchuan5",
+                },
+                isRegister: false,
+                loadingText: '注册中...'
             }
         },
         methods: {
             async signIn () {
-                //this.checkData()
-                //
-                let response
-                // try {
-                //   response = await getFights()
-                //   console.log('res', response)
-                // } catch(error) {
-                //
-                //   console.log('发生错误')
-                // }
-                try {
-                    let data = {username: 'liuchuan4', email: 'liuchuan4@admin.com', password:'1234'}
-                    response = await sendRegister(data)
-                    console.log('regsi-res', response)
-                } catch (err) {
-                    console.log('regsi-err', err.response.status)
-                }
+                this.checkData()
 
+                let response = null
                 if(this.isRegister === true) {
+                    console.log(this.user)
+                    try {
+                        response = await sendRegister(this.user)
+                        console.log('response', response)
+                    } catch (err) {
+                        this.$vux.toast.text('发生了错误', 'middle')
+                    }
 
+                    if(!response.status && response.errors) {
+                        if(response.errors.name) {
+                            let error = _.first(response.errors.name)
+                            this.$vux.toast.text(error, 'middle')
+                            return false
+                        }
+
+                        if(response.errors.email) {
+                            let error = _.first(response.errors.email)
+                            this.$vux.toast.text(error, 'middle')
+                            return false
+                        }
+
+                        if(response.errors.password) {
+                            let error = _.first(response.errors.password)
+                            this.$vux.toast.text(error, 'middle')
+                            return false
+                        }
+                    } else if (response.status === true) {
+                        //设置用户名，设置token，保存token
+                    } else if (response.status == false) {
+
+                    }
                 }
-                //console.log('username:' + this.username, '\nemail:' + this.email, '\npassword:' + this.password, '\npassword_confirm:' + this.password_confirm)
             },
             checkData () {
-                if (this.username.trim() == '') {
+                if (this.user.username.trim() == '') {
                     this.$vux.toast.text('请输入用户名', 'middle')
                     return false
                 }
 
-                if (this.email.trim() == '') {
+                if (this.user.email.trim() == '') {
                     this.$vux.toast.text('请输入E-mail', 'middle')
                     return false
                 }
 
-                if(this.password.trim() == '') {
+                if(this.user.password.trim() == '') {
                     this.$vux.toast.text('请输入密码', 'middle')
                     return false
                 }
 
-                if(this.password.trim().length < 6) {
+                if(this.user.password.trim().length < 6) {
                     this.$vux.toast.text('请输入至少6位数的密码', 'middle')
                     return false
                 }
 
-                if(this.password_confirm.trim() == '') {
+                if(this.user.password_confirmation.trim() == '') {
                     this.$vux.toast.text('请输入确认密码', 'middle')
                     return false
                 }
 
-                if(this.password.trim() != this.password_confirm.trim()) {
+                if(this.user.password.trim() != this.user.password_confirmation.trim()) {
                   this.$vux.toast.text('密码和确认密码不相等', 'middle')
                   return false
                 }
@@ -96,13 +122,12 @@
             }
         },
         computed: {
-            title() {
-              return 'Demo';
-            }
+            ...mapState({
+                isLoading: state => state.isLoading
+            })
         },
         created () {
-          //let a = await getFights()
-          this.signIn()
+
         }
     }
 </script>
