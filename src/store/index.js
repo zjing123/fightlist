@@ -28,7 +28,8 @@ const state = {
   isLoading: false,
   direction: 'forward',
   locale: 'zh_CN',
-  access_token: ''
+  access_token: '',
+  isLoading: false
 }
 
 export default new Vuex.Store({

@@ -7,7 +7,7 @@
       <x-input placeholder="确认密码" type="password" :min="6" v-model="password_confirm" required show-clear></x-input>
     </group>
     <box gap="10px 10px">
-      <x-button type="primary" @click.native="signIn">登录</x-button>
+      <x-button type="primary" @click.native="signIn">注册</x-button>
     </box>
     <router-link to="/login" class="to_register" >已注册？去登录</router-link>
   </div>
@@ -15,6 +15,7 @@
 
 <script>
     import { Group, Cell, XHeader, XInput, XButton, Box, Toast } from 'vux'
+    import { sendRegister, getFights } from '../api/server'
 
     export default {
         components: {
@@ -36,13 +37,29 @@
             }
         },
         methods: {
-            signIn () {
-                this.checkData()
+            async signIn () {
+                //this.checkData()
+                //
+                let response
+                // try {
+                //   response = await getFights()
+                //   console.log('res', response)
+                // } catch(error) {
+                //
+                //   console.log('发生错误')
+                // }
+                try {
+                    let data = {username: 'liuchuan4', email: 'liuchuan4@admin.com', password:'1234'}
+                    response = await sendRegister(data)
+                    console.log('regsi-res', response)
+                } catch (err) {
+                    console.log('regsi-err', err.response.status)
+                }
 
                 if(this.isRegister === true) {
 
                 }
-                console.log('username:' + this.username, '\nemail:' + this.email, '\npassword:' + this.password, '\npassword_confirm:' + this.password_confirm)
+                //console.log('username:' + this.username, '\nemail:' + this.email, '\npassword:' + this.password, '\npassword_confirm:' + this.password_confirm)
             },
             checkData () {
                 if (this.username.trim() == '') {
@@ -82,6 +99,10 @@
             title() {
               return 'Demo';
             }
+        },
+        created () {
+          //let a = await getFights()
+          this.signIn()
         }
     }
 </script>

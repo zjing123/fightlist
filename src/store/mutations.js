@@ -1,5 +1,7 @@
+import * as types from './mutation-types'
 import _ from 'lodash'
 import config from '@/config/base.config'
+
 let localStorage = window.localStorage
 
 export const updateLoadingStatus = (state, payload) => {
@@ -133,4 +135,8 @@ export const setLocale = (state, payload) => {
 export const setAccessToken = (state, payload) => {
   state.access_token = payload.access_token
   state.username = payload.username
+}
+
+export const changeLoding = (state, payload) => {
+  state.isLoading = payload.isLoading
 }
