@@ -21,6 +21,7 @@
     import { mapState, mapMutations } from 'vuex'
     import _ from 'lodash'
     import { sendRegister, getFights } from '../api/server'
+    import { multipleRemoveStore } from '../tools/utils'
 
     export default {
         components: {
@@ -39,27 +40,30 @@
         data () {
             return {
                 user: {
-                    username: "liuchuan5",
-                    email: "liuchuan5@admin.com",
-                    password: "liuchuan5",
-                    password_confirmation: "liuchuan5",
+                    username: "",
+                    email: "",
+                    password: "",
+                    password_confirmation: "",
                 },
                 isRegister: false,
                 loadingText: '注册中...'
             }
         },
         methods: {
+            ...mapMutations([
+                'RECORD_USERINFO',
+                'SET_ACCESS_TOKENS'
+            ]),
             async signIn () {
                 this.checkData()
 
                 let response = null
                 if(this.isRegister === true) {
-                    console.log(this.user)
                     try {
                         response = await sendRegister(this.user)
-                        console.log('response', response)
                     } catch (err) {
                         this.$vux.toast.text('发生了错误', 'middle')
+                        return;
                     }
 
                     if(!response.status && response.errors) {
@@ -82,43 +86,53 @@
                         }
                     } else if (response.status === true) {
                         //设置用户名，设置token，保存token
+                        this.RECORD_USERINFO(response.data.user);
+                        this.SET_ACCESS_TOKENS(response.data.tokens);
+                        this.$vux.toast.text('注册成功!', 'middle')
+                        this.$router.push({name: 'Home'})
                     } else if (response.status == false) {
-
+                        this.$vux.toast.text(response.message, 'middle')
                     }
                 }
             },
             checkData () {
                 if (this.user.username.trim() == '') {
-                    this.$vux.toast.text('请输入用户名', 'middle')
+                    this.$vux.toast.text('请输入用户名', 'middle');
+                    this.isRegister = false
                     return false
                 }
 
                 if (this.user.email.trim() == '') {
-                    this.$vux.toast.text('请输入E-mail', 'middle')
+                    this.$vux.toast.text('请输入E-mail', 'middle');
+                    this.isRegister = false;
                     return false
                 }
 
                 if(this.user.password.trim() == '') {
-                    this.$vux.toast.text('请输入密码', 'middle')
-                    return false
+                    this.$vux.toast.text('请输入密码', 'middle');
+                    this.isRegister = false;
+                    return false;
                 }
 
                 if(this.user.password.trim().length < 6) {
-                    this.$vux.toast.text('请输入至少6位数的密码', 'middle')
-                    return false
+                    this.$vux.toast.text('请输入至少6位数的密码', 'middle');
+                    this.isRegister = false;
+                    return false;
                 }
 
                 if(this.user.password_confirmation.trim() == '') {
-                    this.$vux.toast.text('请输入确认密码', 'middle')
-                    return false
+                    this.$vux.toast.text('请输入确认密码', 'middle');
+                    this.isRegister = false;
+                    return false;
                 }
 
                 if(this.user.password.trim() != this.user.password_confirmation.trim()) {
-                  this.$vux.toast.text('密码和确认密码不相等', 'middle')
-                  return false
+                  this.$vux.toast.text('密码和确认密码不相等', 'middle');
+                  this.isRegister = false;
+                  return false;
                 }
 
-                this.isRegister = true
+                this.isRegister = true;
             }
         },
         computed: {

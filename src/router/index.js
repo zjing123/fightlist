@@ -13,41 +13,55 @@ import Register from '@/pages/Register'
 Vue.use(Router)
 
 export default new Router({
-  routes: [{
-    name: 'Home',
-    path: '/',
-    component: Home
-  }, {
-    name: 'NewGame',
-    path: '/newgame',
-    component: NewGame
-  }, {
-    name: 'Game',
-    path: '/game/:type',
-    component: Game
-  }, {
-    name: 'Play',
-    path: '/play',
-    component: Play
-  }, {
-    name: 'Playresult',
-    path: '/playresult',
-    component: Playresult
-  }, {
-    name: 'Result',
-    path: '/result/:dataId',
-    component: Result
-  }, {
-    name: 'Test',
-    path: '/test',
-    component: Test
-  }, {
-    name: 'Login',
-    path: '/login',
-    component: Login
-  }, {
-    name: 'Register',
-    path: '/register',
-    component: Register
-  }]
+    routes: [{
+        name: 'Home',
+        path: '/',
+        component: Home,
+        meta: {
+            requireAuth: true,
+        }
+    }, {
+        name: 'NewGame',
+        path: '/newgame',
+        component: NewGame,
+        meta: {
+            requireAuth: true,
+        }
+    }, {
+      name: 'Game',
+      path: '/game/:type',
+      component: Game,
+        meta: {
+            requireAuth: true,
+        }
+    }, {
+        name: 'Play',
+        path: '/play',
+        component: Play,
+        meta: {
+            requireAuth: true,
+        }
+    }, {
+        name: 'Playresult',
+        path: '/playresult',
+        component: Playresult,
+        meta: {
+            requireAuth: true,
+        }
+    }, {
+        name: 'Result',
+        path: '/result/:dataId',
+        component: Result,
+        meta: {
+            requireAuth: true,
+        }
+    }, {
+        name: 'Login',
+        path: '/login',
+        component: Login
+    }, {
+      name: 'Register',
+      path: '/register',
+      component: Register
+    }]
 })

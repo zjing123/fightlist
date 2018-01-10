@@ -51,16 +51,6 @@
         </cell>
       </group>
     </div>
-    <div>
-      <x-dialog v-model="showToast" class="dialog-demo">
-        <p style="padding:15px;">
-          select a user
-        </p>
-        <div style="padding:15px;" v-for="(key, val) in users">
-          <x-button @click.native="selectUser(key, val)" type="primary">{{ val }}</x-button>
-        </div>
-      </x-dialog>
-    </div>
   </div>
 </template>
 
@@ -84,6 +74,7 @@ import { Tabbar, TabbarItem, Group, Cell, Box, XButton, Toast, XDialog } from 'v
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import config from '@/config/base.config'
 import _ from 'lodash'
+import { getFights } from '@/api/server'
 
 export default {
   components: {
@@ -102,34 +93,40 @@ export default {
     change (value) {
       console.log('change:', value)
     },
-    selectUser ( token, username ) {
-      this.setAccessToken({access_token: 'Bearer ' + token, username: username})
-      this.showToast = false
-      this.fetchData()
-    },
-    fetchData () {
-      let that = this
-      let params = {
-        lang: this.lang
-      }
-      let config = {
-        headers: {
-          common: {
-            Authorization : this.access_token
-          }
+    // fetchData () {
+    //   let that = this
+    //   let params = {
+    //     lang: this.lang
+    //   }
+    //   let config = {
+    //     headers: {
+    //       common: {
+    //         Authorization : this.access_token
+    //       }
+    //     }
+    //   }
+    //   if(this.access_token) {
+    //     this.$http.get(BASE_URL + "fights", config).then((response) => {
+    //       if(response.data.status == 'success') {
+    //         that.fights = response.data.data.fights
+    //       } else {
+    //         that.$vux.toast.text(this.$t('response.data.data.message'), 'middle')
+    //       }
+    //     }).catch(err => {
+    //       that.$vux.toast.text(this.$t('not found data'), 'middle')
+    //     })
+    //   }
+    // },
+    async fetchData () {
+        let response;
+
+        try{
+            response = await getFights();
+            this.fights = response.data.fights;
+        } catch (err) {
+            this.$vux.toast.text(this.$t('not found data'), 'middle');
+            return;
         }
-      }
-      if(this.access_token) {
-        this.$http.get(BASE_URL + "fights", config).then((response) => {
-          if(response.data.status == 'success') {
-            that.fights = response.data.data.fights
-          } else {
-            that.$vux.toast.text(this.$t('response.data.data.message'), 'middle')
-          }
-        }).catch(err => {
-          that.$vux.toast.text(this.$t('not found data'), 'middle')
-        })
-      }
     },
     getFightsByType ( type ) {
       if(this.fights === null) {
@@ -175,8 +172,6 @@ export default {
     return {
       fights: null,
       fightings: null,
-      showToast: true,
-      users: config.users
     }
   },
   created () {

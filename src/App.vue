@@ -81,11 +81,11 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'setLocale'
+      'SET_LOCALE'
     ]),
     changeLocale (locale) {
-      this.$i18n.set(locale)
-      this.setLocale({locale: locale})
+      this.$i18n.set(locale);
+      this.SET_LOCALE({locale: locale});
       //this.$locale.set(locale)
     },
     onClickMore () {

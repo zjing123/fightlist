@@ -56,7 +56,7 @@
           </div>
         </div>
         <div style="margin-top:10px;" v-show="!isEnd">
-          <x-button type="primary" link="/play" @click.native="questionIndexIncrement">{{ $t('continue the game') }}</x-button>
+          <x-button type="primary" link="/play">{{ $t('continue the game') }}</x-button>
         </div>
         <div style="margin-top:10px;" v-show="isEnd">
           <x-button type="primary" @click.native="syncData">{{ $t('return home page') }}</x-button>
@@ -149,11 +149,7 @@ export default {
     onImgError (item, $event) {
     },
     ...mapMutations([
-      'indexIncrement',
-      'indexDecrement',
-      'questionIndexIncrement',
-      'setTitle',
-      'syncResult'
+      'SYNC_RESULT'
     ]),
     showAnswer () {
       this.showAnswerBox = true
@@ -196,7 +192,7 @@ export default {
         }
       }
 
-      this.syncResult()
+      this.SYNC_RESULT()
       this.$http.post(BASE_URL + "fightrecords", params, config).then((response) => {
         if (response.data.status == 'success') {
           if(response.data.data.finished == true) {

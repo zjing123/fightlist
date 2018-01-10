@@ -132,9 +132,8 @@ export default {
       }
     },
     ...mapMutations([
-      'pushCurrentResult',
-      'setQuestionIndexToIndex',
-      'pushUsedIndex'
+      'PUSH_CURRENT_RESULT',
+      'PUSH_USED_INDEX'
     ])
   },
   computed: {
@@ -167,8 +166,8 @@ export default {
         let questionId = this.question.id
         this.result.id = questionId
         this.result.title = this.question.title
-        this.pushCurrentResult(this.result)
-        this.pushUsedIndex(questionId)
+        this.PUSH_CURRENT_RESULT(this.result)
+        this.PUSH_USED_INDEX(questionId)
         this.$router.push({name: 'Playresult'})
       }
     }

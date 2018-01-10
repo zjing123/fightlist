@@ -141,18 +141,14 @@ export default {
     onImgError (item, $event) {
     },
     ...mapMutations([
-      'indexIncrement',
-      'indexDecrement',
-      'questionIndexIncrement',
-      'setTitle',
-      'syncResult',
-      'setResults'
+      'SYNC_RESULT',
+      'SET_RESULTS'
     ]),
     showAnswer () {
       this.showAnswerBox = true
     },
     syncData() {
-      this.syncResult()
+      this.SYNC_RESULT()
       window.localStorage.clear()
     },
     nextResult () {
@@ -211,7 +207,7 @@ export default {
 
       this.$http.get(BASE_URL + "fights/" + id, config).then((response) => {
         if(response.data.status == 'success') {
-          this.setResults(response.data.data)
+          this.SET_RESULTS(response.data.data)
           this.result = this.getFirstRightResult
         } else {
           this.$vux.toast.text(response.data.data.message, 'middle')

@@ -44,14 +44,6 @@ for (let i in finalLocales) {
 }
 /*vuex-i18n end*/
 
-if(sessionStorage.getItem('access_token')) {
-  //AjaxPlugin.$http.defaults.headers.common['Authorization'] = 'Bearer ' + sessionStorage.getItem('access_token')
-  store.commit('setAccessToken', {access_token: 'Bearer ' + sessionStorage.getItem('access_token')})
-} else {
-  //store.commit('setAccessToken', {access_token: 'Bearer ' + config.users.test})
-  //AjaxPlugin.$http.defaults.headers.common['Authorization'] = 'Bearer ' + config.token.test
-}
-
 Vue.use(AjaxPlugin)
 Vue.use(ToastPlugin)
 
@@ -60,22 +52,24 @@ sync(store, router)
 router.afterEach((to, from) => {
   if(to.path == '/play') {
     store.dispatch('start');
-    store.commit('initParams')
+    store.commit('INIT_PARAMS')
   }
 
-  if(to.path == '/' || to.path == '/playresult') {
-    store.commit('disableShowBack')
+  let $disableShowBackPath = ['Home', 'Playresult', 'Login', 'Register'];
+
+  if($disableShowBackPath.indexOf(to.name) !== -1) {
+    store.commit('DISABLE_SHOW_BACK')
   } else {
-    store.commit('enableShowBack')
+    store.commit('ENABLE_SHOW_BACK')
   }
 
   if(to.path == '/') {
-    store.commit('enableShowMore')
+    store.commit('ENABLE_SHOW_MORE')
   } else {
-    store.commit('disableShowMore')
+    store.commit('DISABLE_SHOW_MORE')
   }
 
-  store.commit('setTitle', getRouterTitle(to.name))
+  store.commit('SET_TIELE', getRouterTitle(to.name))
 })
 
 const history = window.sessionStorage;
@@ -84,20 +78,35 @@ let historyCount = history.getItem('count') * 1 || 0
 history.setItem('/', 0)
 
 router.beforeEach(function(to, from, next) {
+
+    //判断该路由是否需要登录
+    if(to.meta.requireAuth) {
+        if(store.state.tokens.access_token) {
+            next();
+        } else {
+            next({
+              path: '/login',
+              query: {redirect: to.fullPath} //将跳转的路由path作为参数,登录成功后跳转到该路由
+            });
+        }
+    } else {
+        next();
+    }
+
   const toIndex = history.getItem(to.path)
   const fromIndex = history.getItem(from.path)
 
   if(toIndex) {
     if(!fromIndex || parseInt(toIndex, 10) > parseInt(fromIndex, 10) || (toIndex === '0' && fromIndex === '0')) {
-      store.commit('updateDirection', {direction: 'forward'})
+      store.commit('UPDATE_DIRECTION', {direction: 'forward'})
     } else {
-       store.commit('updateDirection', { direction: 'reverse' })
+       store.commit('UPDATE_DIRECTION', { direction: 'reverse' })
     }
   } else {
     ++historyCount
     history.setItem('count', historyCount)
     to.path !== '/' && history.setItem(to.path, historyCount)
-    store.commit('updateDirection', {direction: 'forward'})
+    store.commit('UPDATE_DIRECTION', {direction: 'forward'})
   }
 
   if(/\/http/.test(to.path)) {
