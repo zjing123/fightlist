@@ -1,4 +1,5 @@
-import { getStore } from '@/tools/utils'
+import { getStore, removeStore, multipleRemoveStore } from '@/tools/utils'
+import * as types from '../store/mutation-types'
 
 export const incrementAsync = ({ commit }) => {
   setTimeout(() => {
@@ -11,7 +12,7 @@ export const start = ({ commit, state })=> {
     timerId = setInterval(function() {
 
     if(state.time > 0) {
-      commit('START')
+      commit(types.START)
     } else {
        clearInterval(timerId);
     }
@@ -19,48 +20,35 @@ export const start = ({ commit, state })=> {
 }
 
 export const initData = ({ commit, state }) => {
+    console.log(state)
     if(getStore('userinfo')) {
-        commit('RECORD_USERINFO', getStore('userinfo'));
+        commit(types.RECORD_USERINFO, getStore('userinfo'));
     }
 
     if(getStore('tokens')) {
-        commit('SET_ACCESS_TOKENS', getStore('tokens'));
+        commit(types.SET_ACCESS_TOKENS, getStore('tokens'));
     }
 
     if(getStore('questions_data')) {
-        commit('RECORD_QUESTIONS', getStore('question_data'));
+        commit(types.RECORD_QUESTIONS, getStore('question_data'));
+    }
+
+    if(getStore('currentResults')) {
+        commit(types.RECORD_CURRENT_RESULTS, getStore('currentResults'))
     }
 
     if(getStore('usedIndexes')) {
-        commit('PUSH_USED_INDEX', getStore('usedIndexes'));
+        commit(types.RECORD_USED_INDEX, getStore('usedIndexes'));
     }
 
     if(getStore('locale')) {
-        commit('SET_LOCALE', getStore('locale'));
+        commit(types.SET_LOCALE, getStore('locale'));
     }
+}
 
-    // var windowLocalStorage = window.localStorage
-    // if(windowLocalStorage.getItem('currentResults')) {
-    //   state.currentResults = JSON.parse(windowLocalStorage.getItem('currentResults'))
-    // }
-    //
-    // if(windowLocalStorage.getItem('record_id')) {
-    //   state.record_id = windowLocalStorage.getItem('record_id')
-    // }
-    //
-    // if(windowLocalStorage.getItem('questionGroup')){
-    //   state.questionGroup = windowLocalStorage.getItem('questionGroup')
-    // }
-    //
-    // if(windowLocalStorage.getItem('questions')) {
-    //   state.questions = JSON.parse(windowLocalStorage.getItem('questions'))
-    // }
-    //
-    // if(windowLocalStorage.getItem('usedIndexes')) {
-    //   state.usedIndexes = JSON.parse(windowLocalStorage.getItem('usedIndexes'))
-    // }
-    //
-    // if(windowLocalStorage.getItem('locale')) {
-    //   state.locale = windowLocalStorage.getItem('locale')
-    // }
+export const resetStore = ({ commit, state }) => {
+    multipleRemoveStore(['currentResults', 'questions_data', 'usedIndexes']);
+    commit(types.RESET_QUESTIONS);
+    commit(types.RESET_USED_INDEX);
+    commit(types.RESET_CURRENT_RESULT);
 }

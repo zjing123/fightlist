@@ -9,6 +9,7 @@ import Result from '@/pages/Result'
 import Test from '@/pages/Test'
 import Login from '@/pages/Login'
 import Register from '@/pages/Register'
+import Fights from '@/pages/Users'
 
 Vue.use(Router)
 
@@ -60,8 +61,15 @@ export default new Router({
         path: '/login',
         component: Login
     }, {
-      name: 'Register',
-      path: '/register',
-      component: Register
+        name: 'Register',
+        path: '/register',
+        component: Register
+    }, {
+        name: 'Fights',
+        path: '/fights/:dataId',
+        component: Fights,
+        meta: {
+            requireAuth: true,
+        }
     }]
 })

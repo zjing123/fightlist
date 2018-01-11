@@ -1,7 +1,16 @@
 'use strict'
 module.exports = {
-  BASE_URL: {
-    dev: '"http://test.laravel-voyager.com/api/"',
-    prod: '"http://test.laravel-voyager.com/api/"'
-  }
+    dev: {
+        // BASE_URL: '"http://test.laravel-voyager.com/api/"',
+        // DOMAIN: '"http://test.laravel-voyager.com"',
+        // IMAGE_URL: '"http://test.laravel-voyager.com/storage"',
+        BASE_URL: '"http://192.168.88.178:8090/api/"',
+        DOMAIN: '"http://192.168.88.178:8090"',
+        IMAGE_URL: '"http://192.168.88.178:8090/storage"',
+    },
+    prod: {
+        BASE_URL: '"http://test.laravel-voyager.com/api/"',
+        DOMAIN: '"http://test.laravel-voyager.com"',
+        IMAGE_URL: '"http://test.laravel-voyager.com/storage"',
+    }
 }

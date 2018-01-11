@@ -7,6 +7,7 @@ const baseWebpackConfig = require('./webpack.base.conf')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
+const server = require('../config/server.env').dev
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
@@ -38,8 +39,9 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': require('../config/dev.env'),
-      'BASE_URL': require('../config/server.env').BASE_URL.dev
-      //'BASE_URL': '"http://47.90.35.157/api/"'
+      'BASE_URL': server.BASE_URL,
+      'DOMAIN': server.DOMAIN,
+      'IMAGE_URL': server.IMAGE_URL
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.

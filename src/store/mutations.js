@@ -5,12 +5,15 @@ import { setStore, getStore, removeStore, multipleRemoveStore } from '@/tools/ut
 
 export default {
     [types.UPDATE_LOADING_STATUS](state, isLoading) {
+        console.log('Mutation:', types.UPDATE_LOADING_STATUS);
         state.isLoading = isLoading
     },
     [types.UPDATE_DIRECTION](state, payload) {
+        console.log('Mutation:', types.UPDATE_DIRECTION);
         state.direction = payload.direction
     },
     [types.RECORD_QUESTIONS](state, payload) {
+        console.log('Mutation:', types.RECORD_QUESTIONS);
         if(payload) {
             state.questions = payload.questions;
             state.record_id = payload.record_id;
@@ -18,22 +21,40 @@ export default {
             // setStore('record_id', state.record_id)
         }
     },
+    [types.RESET_QUESTIONS](state) {
+        console.log('Mutation:', types.RESET_QUESTIONS);
+        state.questions = null;
+        state.record_id = null;
+    },
     [types.SET_TITLE](state, title) {
+        console.log('Mutation:', types.SET_TITLE);
         state.title = title
     },
     [types.START](state) {
+        console.log('Mutation:', types.START);
         if(state.time > 0) {
           state.time--
           state.percentage = state.percentage - state.speed
         }
     },
     [types.INIT_PARAMS](state) {
+        console.log('Mutation:', types.INIT_PARAMS);
         state.time = config.time;
         state.percentage = config.percentage;
     },
     [types.PUSH_CURRENT_RESULT](state, result) {
+        console.log('Mutation:', types.PUSH_CURRENT_RESULT);
         state.currentResults.push(result);
         setStore('currentResults', state.currentResults);
+    },
+    [types.RECORD_CURRENT_RESULTS](state, results) {
+        console.log('Mutation:', types.RECORD_CURRENT_RESULTS);
+        state.currentResults = results;
+        setStore('currentResults', state.currentResults);
+    },
+    [types.RESET_CURRENT_RESULT](state) {
+        console.log('Mutation:', types.RESET_CURRENT_RESULT);
+        state.currentResults = [];
     },
     [types.SYNC_RESULT](state) {
         if(state.currentResults) {
@@ -58,6 +79,16 @@ export default {
         state.usedIndexes.push(id)
         state.usedIndexes = _.uniq(state.usedIndexes);
         setStore('usedIndexes', state.usedIndexes);
+    },
+    /**
+     * [usedIndexes 通过数组更新usedIndexes]
+     * @type {[array]}
+     */
+    [types.RECORD_USED_INDEX](state, usedIndexes) {
+        state.usedIndexes = _.uniq(usedIndexes)
+    },
+    [types.RESET_USED_INDEX](state) {
+        state.usedIndexes = [];
     },
     [types.DISABLE_SHOW_BACK](state) {
         state.showBack = false;

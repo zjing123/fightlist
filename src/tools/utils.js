@@ -16,14 +16,14 @@ export const setStore = (name, content) => {
  * 获取localStorage
  */
 export const getStore = name => {
-    if(!name) return
-    let content;
+    if(!name) return null;
+    let content = null;
     try{
-        content = JSON.parse(localStorage.getItem(name))
+        content = JSON.parse(localStorage.getItem(name));
     } catch (err) {
-        content = localStorage.getItem(name)
+        content = localStorage.getItem(name);
     }
-    return content
+    return content;
 }
 
 /**

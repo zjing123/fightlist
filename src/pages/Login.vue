@@ -36,8 +36,8 @@
         data () {
             return {
                 user: {
-                    email: "liuchuan5@admin.com",
-                    password: "liuchuan5"
+                    email: "",
+                    password: ""
                 },
                 isLogin: false,
                 loadingText: '登录中...'

@@ -6,10 +6,10 @@
     <div style="margin-top:30px;" v-if="fights != null">
       <p style="padding-left:15px;color:#fff;" v-html="$t('game records')"></p>
       <group :title="$t('Single player game') + ':'" v-if="getFightsByType(1) != null" class="game-info">
-        <cell is-link v-for="(fight, index) in getFightsByType(1)" :key="fight.id" :link="{name: 'Result', params:{dataId: fight.id}}">
+        <cell is-link v-for="(fight, index) in getFightsByType(1)" :key="fight.id" :link="getLink(fight)">
           <div slot="title">
             <div class="circular--landscape" >
-              <img src="../assets/user.jpg"/>
+              <img src="domain + '/' + userinfo.avatar"/>
             </div>
             <div class="game-info-desc">
               <p class="title">{{ fight.user.name }}</p>
@@ -21,13 +21,13 @@
         </cell>
       </group>
       <group :title="$t('Multiplayer war') + ':'" v-if="getFightsByType(2) != null" class="game-info">
-        <cell is-link v-for="(fight, index) in getFightsByType(2)" :key="fight.id" :link="{name: 'Result', params:{dataId: fight.id}}">
+        <cell is-link v-for="(fight, index) in getFightsByType(2)" :key="fight.id" :link="getLink(fight)">
           <div slot="title">
             <div class="circular--landscape" >
               <img src="../assets/user.jpg"/>
             </div>
             <div class="game-info-desc">
-              <p class="title">{{ fight.user.name }}</p>
+              <p class="title">{{ fight.user.name }}[{{ fight.created_at }}]</p>
               <p class="desc">
                 {{ $t('score') }}：<span>{{ fight.score }}</span>
               </p>
@@ -36,15 +36,15 @@
         </cell>
       </group>
       <group :title="$t('unfinished game') + ':'" v-if="getUnfinishedFight() != null" class="game-info">
-        <cell is-link v-for="(fight, index) in getUnfinishedFight()" :key="fight.id" :link="{name: 'Result', params:{dataId: fight.id}}">
+        <cell is-link v-for="(fight, index) in getUnfinishedFight()" :key="fight.id" :link="getLink(fight)">
           <div slot="title">
             <div class="circular--landscape" >
-              <img src="../assets/user.jpg"/>
+              <img :src="image_path + '/' + userinfo.avatar"/>
             </div>
             <div class="game-info-desc">
               <p class="title">{{ fight.user.name }}</p>
               <p class="desc">
-                {{ $t('score') }}：<span>{{ fight.score }}</span>
+                {{ $t('score') }}：<span>{{ fight.score }} - {{ fight.fight.type }}</span>
               </p>
             </div>
           </div>
@@ -93,30 +93,15 @@ export default {
     change (value) {
       console.log('change:', value)
     },
-    // fetchData () {
-    //   let that = this
-    //   let params = {
-    //     lang: this.lang
-    //   }
-    //   let config = {
-    //     headers: {
-    //       common: {
-    //         Authorization : this.access_token
-    //       }
-    //     }
-    //   }
-    //   if(this.access_token) {
-    //     this.$http.get(BASE_URL + "fights", config).then((response) => {
-    //       if(response.data.status == 'success') {
-    //         that.fights = response.data.data.fights
-    //       } else {
-    //         that.$vux.toast.text(this.$t('response.data.data.message'), 'middle')
-    //       }
-    //     }).catch(err => {
-    //       that.$vux.toast.text(this.$t('not found data'), 'middle')
-    //     })
-    //   }
-    // },
+    getLink (fight) {
+        if(fight.fight.type === 1) {
+            return {name: 'Result', params:{dataId: fight.id}};
+        }
+
+        if(fight.fight.type === 2) {
+            return {name: 'Fights', params:{dataId: fight.fight.id}};
+        }
+    },
     async fetchData () {
         let response;
 
@@ -161,11 +146,13 @@ export default {
   },
   computed: {
     ...mapState({
-      lang: state => state.locale,
-      access_token : state => state.access_token
+        state: state => state,
+        image_path: state => state.image_path,
+        userinfo: state => state.userinfo,
+        lang: state => state.locale,
+        access_token : state => state.access_token
     }),
     ...mapGetters([
-      'getQuestion'
     ]),
   },
   data () {
@@ -196,7 +183,7 @@ export default {
 .circular--landscape img{
     width:auto;
     height:100%;
-    margin-left:-50%;
+    /*margin-left:-50%;*/
 }
 
 .weui-cells__title {

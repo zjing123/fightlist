@@ -6,7 +6,7 @@
         <img :src="userImageSrc">
       </p>
       <p style="text-align:center;color:#fff;">
-        <span style="margin-top:5px;">{{ state.username }}</span>
+        <span style="margin-top:5px;">{{ state.userinfo.name }}</span>
       </p>
       </blur>
     </div>
@@ -101,6 +101,7 @@ zh_CN:
 import { Flexbox, FlexboxItem, XButton, Group, Panel, Scroller, XInput, XTable, Box, XProgress, XDialog, Blur  } from 'vux'
 import { mapState, mapActions, mapGetters, mapMutations} from 'vuex'
 import VmProgress from 'vue-multiple-progress'
+import { getFightRecord } from '../api/server'
 
 export default {
   components: {
@@ -130,100 +131,89 @@ export default {
       clasScoreNum: 'score-num',
       result:null,
       userImageSrc: 'https://o3e85j0cv.qnssl.com/tulips-1083572__340.jpg',
-      images: [
-        'https://o3e85j0cv.qnssl.com/tulips-1083572__340.jpg',
-        'https://o3e85j0cv.qnssl.com/waterway-107810__340.jpg',
-        'https://o3e85j0cv.qnssl.com/hot-chocolate-1068703__340.jpg'
-      ]
     }
   },
   methods: {
-    onImgError (item, $event) {
-    },
-    ...mapMutations([
-      'SYNC_RESULT',
-      'SET_RESULTS'
-    ]),
-    showAnswer () {
-      this.showAnswerBox = true
-    },
-    syncData() {
-      this.SYNC_RESULT()
-      window.localStorage.clear()
-    },
-    nextResult () {
-      this.result = this.getNextRightResult(this.result.result.id)
-    },
-    prevResult () {
-      this.result = this.getPrevRightResult(this.result.result.id)
-    },
-    getAnswers (id) {
-      //let id = this.result.result.id
-      return this.getResultAnswersByQuestionId(id)
-    }
-  },
-  computed: {
-    ...mapState({
-      route: state => state.route,
-      path: state => state.route.path,
-      state: state => state,
-      questions: state => state.questions,
-      time: state => state.time,
-      percentage: state => state.percentage,
-      currentResults: state => state.currentResults,
-      access_token: state => state.access_token
-    }),
-    ...mapGetters([
-      'getFirstRightResult',
-      'getLastRightResult',
-      'getNextRightResult',
-      'getPrevRightResult',
-      'getQuestionById',
-      'getResultAnswersByQuestionId',
-      'isEnd'
-    ]),
-    getScore () {
-      var score = 0
-      for( let i in this.getAnswers) {
-        if(this.getAnswers[i].score !== undefined) {
-          score += parseInt(this.getAnswers[i].score, 10);
-        }
+      onImgError (item, $event) {
+      },
+      ...mapMutations([
+          'SYNC_RESULT',
+          'SET_RESULTS'
+      ]),
+      showAnswer () {
+          this.showAnswerBox = true
+      },
+      syncData() {
+          this.SYNC_RESULT()
+          window.localStorage.clear()
+      },
+      nextResult () {
+          this.result = this.getNextRightResult(this.result.result.id)
+      },
+      prevResult () {
+          this.result = this.getPrevRightResult(this.result.result.id)
+      },
+      getAnswers (id) {
+          return this.getResultAnswersByQuestionId(id)
       }
-      return score;
     },
-    question () {
-      return this.getQuestionById(this.result.result.id)
-    },
-    fetchData () {
-      let id = this.$route.params.dataId | 0
-      var that = this
-      let config = {
-        headers: {
-          common: {
-            Authorization : this.access_token
+    computed: {
+      ...mapState({
+          route: state => state.route,
+          path: state => state.route.path,
+          state: state => state,
+          questions: state => state.questions,
+          time: state => state.time,
+          percentage: state => state.percentage,
+          currentResults: state => state.currentResults,
+          access_token: state => state.access_token
+      }),
+      ...mapGetters([
+          'getFirstRightResult',
+          'getLastRightResult',
+          'getNextRightResult',
+          'getPrevRightResult',
+          'getQuestionById',
+          'getResultAnswersByQuestionId',
+          'isEnd'
+      ]),
+      getScore () {
+          var score = 0
+          for( let i in this.getAnswers) {
+              if(this.getAnswers[i].score !== undefined) {
+                  score += parseInt(this.getAnswers[i].score, 10);
+              }
           }
-        }
+          return score;
+      },
+      question () {
+          return this.getQuestionById(this.result.result.id)
+      },
+      async fetchData () {
+          let id = this.$route.params.dataId | 0;
+
+          let response;
+          try {
+              response = await getFightRecord(id);
+              console.log(response)
+              if(response.status === true) {
+                  this.SET_RESULTS(response.data);
+                  this.result = this.getFirstRightResult;
+              } else {
+                  this.$vux.toast.text(response.message, 'middle');
+              }
+          } catch (error) {
+            console.log(error)
+              this.$vux.toast.text('数据获取失败', 'middle')
+          }
       }
-
-      this.$http.get(BASE_URL + "fights/" + id, config).then((response) => {
-        if(response.data.status == 'success') {
-          this.SET_RESULTS(response.data.data)
-          this.result = this.getFirstRightResult
-        } else {
-          this.$vux.toast.text(response.data.data.message, 'middle')
-        }
-      }).catch(err => {
-        this.$vux.toast.text('数据获取失败', 'middle')
-      })
-
-    }
   },
   mounted () {
-    this.$nextTick(()=>{
-    })
+      this.$nextTick(()=>{
+      })
   },
   created () {
-    this.fetchData
+      this.fetchData
   }
 }
 </script>

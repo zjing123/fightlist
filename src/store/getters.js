@@ -9,9 +9,11 @@ export const percentage = state => {
 }
 
 export const getQuestion = state => {
-  return state.questions.find(function(question) {
-    return _.indexOf(state.usedIndexes, question.id) === -1
-  }) || _.last(state.questions)
+  if(state.questions) {
+    return state.questions.find(function(question) {
+      return _.indexOf(state.usedIndexes, question.id) === -1
+    }) || _.last(state.questions)
+  }
 }
 
 export const getQuestionById = state => (id) => {

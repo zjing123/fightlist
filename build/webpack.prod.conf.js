@@ -9,6 +9,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+const server = require('../config/server.env').prod
 
 const env = require('../config/prod.env')
 
@@ -30,7 +31,9 @@ const webpackConfig = merge(baseWebpackConfig, {
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
       'process.env': env,
-      'BASE_URL': require('../config/server.env').BASE_URL.prod
+      'BASE_URL': server.BASE_URL,
+      'DOMAIN': server.DOMAIN,
+      'IMAGE_URL': server.IMAGE_URL
     }),
     // UglifyJs do not support ES6+, you can also use babel-minify for better treeshaking: https://github.com/babel/minify
     new webpack.optimize.UglifyJsPlugin({

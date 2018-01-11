@@ -18,7 +18,7 @@ const state = {
     currentResults:[],
     results: [],
     rightResults: [],
-    questions: questions,
+    questions: null,
     questionGroup:null,
     record_id:null,
     showBack: true,
@@ -29,7 +29,9 @@ const state = {
     access_token: '',
     isLoading: false,
     userinfo:{},
-    tokens: {}
+    tokens: {},
+    domain: DOMAIN,
+    image_path: IMAGE_URL
 }
 
 export default new Vuex.Store({

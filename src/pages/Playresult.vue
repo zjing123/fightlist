@@ -6,7 +6,7 @@
         <img :src="userImageSrc">
       </p>
       <p style="text-align:center;color:#fff;">
-        <span style="margin-top:5px;">{{ state.username }}</span>
+        <span style="margin-top:5px;">{{ state.userinfo.name }}</span>
       </p>
       </blur>
     </div>
@@ -109,6 +109,7 @@ zh_CN:
 import { Flexbox, FlexboxItem, XButton, Group, Panel, Scroller, XInput, XTable, Box, XProgress, XDialog, Blur  } from 'vux'
 import { mapState, mapActions, mapGetters, mapMutations} from 'vuex'
 import VmProgress from 'vue-multiple-progress'
+import { sendGameData } from '../api/server'
 
 export default {
   components: {
@@ -137,77 +138,45 @@ export default {
       showAnswerBox: false,
       clasScoreNum: 'score-num',
       currentResult:null,
-      userImageSrc: 'https://o3e85j0cv.qnssl.com/tulips-1083572__340.jpg',
-      images: [
-        'https://o3e85j0cv.qnssl.com/tulips-1083572__340.jpg',
-        'https://o3e85j0cv.qnssl.com/waterway-107810__340.jpg',
-        'https://o3e85j0cv.qnssl.com/hot-chocolate-1068703__340.jpg'
-      ]
+      userImageSrc: 'https://o3e85j0cv.qnssl.com/tulips-1083572__340.jpg'
     }
   },
   methods: {
     onImgError (item, $event) {
     },
+    ...mapActions([
+        'resetStore'
+    ]),
     ...mapMutations([
-      'SYNC_RESULT'
+        'SYNC_RESULT'
     ]),
     showAnswer () {
-      this.showAnswerBox = true
+        this.showAnswerBox = true;
     },
-    clearStorage () {
-      var windowLocalStorage = window.localStorage
-      if(windowLocalStorage.getItem('currentResults')) {
-        windowLocalStorage.removeItem('currentResults')
-      }
+    async syncData() {
+        let params = {
+          lang: this.lang,
+          record_id: this.record_id,
+          result: this.currentResults,
+          score: this.totalScore(),
+          finished: 1
+        };
 
-      if(windowLocalStorage.getItem('record_id')) {
-        state.record_id = windowLocalStorage.removeItem('record_id')
-      }
-
-      if(windowLocalStorage.getItem('questionGroup')){
-        state.questionGroup = windowLocalStorage.removeItem('questionGroup')
-      }
-
-      if(windowLocalStorage.getItem('questions')) {
-        windowLocalStorage.removeItem('questions')
-      }
-
-      if(windowLocalStorage.getItem('usedIndexes')) {
-        windowLocalStorage.removeItem('usedIndexes')
-      }
-    },
-    syncData() {
-      let params = {
-        lang: this.lang,
-        record_id: this.record_id,
-        result: this.currentResults,
-        score: this.totalScore(),
-        finished: 1
-      }
-      let config = {
-        headers: {
-          common: {
-            Authorization : this.access_token
-          }
+        let response;
+        try {
+            response = await sendGameData(params);
+            console.log('response', response)
+            if(response.status === true) {
+                this.resetStore();
+            } else {
+                this.$vux.toast.text(response.data.message, 'middle');
+            }
+        } catch(error) {
+            console.log('error', error);
         }
-      }
 
-      this.SYNC_RESULT()
-      this.$http.post(BASE_URL + "fightrecords", params, config).then((response) => {
-        if (response.data.status == 'success') {
-          if(response.data.data.finished == true) {
-            this.clearStorage()
-          } else {
-          }
-          this.$router.push({name: 'Home'})
-        } else {
-          this.$vux.toast.text(response.data.message, 'middle')
-          this.$router.push({name: 'Home'})
-        }
-      }).catch(err => {
-        this.$router.push({name: 'Home'})
-        this.$vux.toast.text(this.$t('not found data'), 'middle')
-      })
+        this.SYNC_RESULT();
+        this.$router.push({name: 'Home'});
     },
     totalScore () {
       var score = 0;
@@ -216,7 +185,6 @@ export default {
           score += parseInt(answer.score)
         }
       }
-
       return score
     },
     getNextRightResult () {
