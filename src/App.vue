@@ -15,12 +15,14 @@
       @on-click-more="onClickMore"
       ></x-header>
 
-      <transition
+      <!-- <transition
       :name="viewTransition" :css="!!direction"
+      > -->
+      <transition
+      name="router-fade" :css="!!direction"
       >
-        <router-view class="router-view" style="height:100%;"></router-view>
+          <router-view class="router-view" style="height:100%;"></router-view>
       </transition>
-
 
       <tabbar slot="bottom" v-if="path === '/'">
             <tabbar-item  v-for="(tabbar, index) in tabbars" v-if="tabbar.show" :selected="tabbar.selected" :link="tabbar.link" :key="index">
@@ -170,4 +172,11 @@ body {
   opacity: 0;
   transform: translate3d(-100%, 0, 0);
 }
+
+.router-fade-enter-active, .router-fade-leave-active {
+	  	transition: opacity .3s;
+	}
+	.router-fade-enter, .router-fade-leave-active {
+	  	opacity: 0;
+	}
 </style>

@@ -175,16 +175,20 @@ export default {
             console.log('error', error);
         }
 
+        console.log('yes')
+
         this.SYNC_RESULT();
         this.$router.push({name: 'Home'});
     },
     totalScore () {
       var score = 0;
-      for( var result in this.currentResults) {
-        for( var answer in result.answers) {
-          score += parseInt(answer.score)
+      for( var i in this.currentResults) {
+        let result = this.currentResults[i];
+        for( var j in result.answers) {
+          score += parseInt(result.answers[j].score)
         }
       }
+      console.log('score', score)
       return score
     },
     getNextRightResult () {
@@ -240,11 +244,16 @@ export default {
     }
   },
   mounted() {
-    this.$nextTick(()=>{
-    })
+    // this.$nextTick(()=>{
+    //   this.currentResult = this.getLastCurrentResult;
+    //   console.log(this.currentResult)
+    // })
   },
   created () {
-    this.currentResult = this.getLastCurrentResult
+    this.$nextTick(()=>{
+      this.currentResult = this.getLastCurrentResult;
+      console.log(this.currentResult)
+    })
   }
 }
 </script>

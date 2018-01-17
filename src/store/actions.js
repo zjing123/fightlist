@@ -30,15 +30,15 @@ export const initData = ({ commit, state }) => {
     }
 
     if(getStore('questions_data')) {
-        commit(types.RECORD_QUESTIONS, getStore('question_data'));
+        //commit(types.RECORD_QUESTIONS, getStore('question_data'));
     }
 
     if(getStore('currentResults')) {
-        commit(types.RECORD_CURRENT_RESULTS, getStore('currentResults'))
+        //commit(types.RECORD_CURRENT_RESULTS, getStore('currentResults'))
     }
 
     if(getStore('usedIndexes')) {
-        commit(types.RECORD_USED_INDEX, getStore('usedIndexes'));
+        //commit(types.RECORD_USED_INDEX, getStore('usedIndexes'));
     }
 
     if(getStore('locale')) {

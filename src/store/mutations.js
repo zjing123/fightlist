@@ -23,7 +23,7 @@ export default {
     },
     [types.RESET_QUESTIONS](state) {
         console.log('Mutation:', types.RESET_QUESTIONS);
-        state.questions = null;
+        state.questions = [];
         state.record_id = null;
     },
     [types.SET_TITLE](state, title) {
@@ -45,12 +45,12 @@ export default {
     [types.PUSH_CURRENT_RESULT](state, result) {
         console.log('Mutation:', types.PUSH_CURRENT_RESULT);
         state.currentResults.push(result);
-        setStore('currentResults', state.currentResults);
+        //setStore('currentResults', state.currentResults);
     },
     [types.RECORD_CURRENT_RESULTS](state, results) {
         console.log('Mutation:', types.RECORD_CURRENT_RESULTS);
         state.currentResults = results;
-        setStore('currentResults', state.currentResults);
+        //setStore('currentResults', state.currentResults);
     },
     [types.RESET_CURRENT_RESULT](state) {
         console.log('Mutation:', types.RESET_CURRENT_RESULT);

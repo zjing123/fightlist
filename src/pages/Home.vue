@@ -35,21 +35,6 @@
           </div>
         </cell>
       </group>
-      <group :title="$t('unfinished game') + ':'" v-if="getUnfinishedFight() != null" class="game-info">
-        <cell is-link v-for="(fight, index) in getUnfinishedFight()" :key="fight.id" :link="getLink(fight)">
-          <div slot="title">
-            <div class="circular--landscape" >
-              <img :src="image_path + '/' + userinfo.avatar"/>
-            </div>
-            <div class="game-info-desc">
-              <p class="title">{{ fight.user.name }}</p>
-              <p class="desc">
-                {{ $t('score') }}：<span>{{ fight.score }} - {{ fight.fight.type }}</span>
-              </p>
-            </div>
-          </div>
-        </cell>
-      </group>
     </div>
   </div>
 </template>
@@ -128,21 +113,6 @@ export default {
 
       return fights
     },
-    getUnfinishedFight () {
-      if(this.fights === null) {
-        return null
-      }
-
-      let fights =  this.fights.filter(function (fight) {
-        return fight.finished == 0
-      })
-
-      if(_.isEmpty(fights)) {
-        return null
-      }
-
-      return fights
-    }
   },
   computed: {
     ...mapState({

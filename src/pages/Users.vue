@@ -10,7 +10,7 @@
             <div class="game-info-desc">
               <p class="title">{{ fight.user.name }}</p>
               <p class="desc">
-                {{ $t('score') }}： <span>{{ fight.score }}</span> [{{fight.finished ? '完成' : '未完成'}}]
+                {{ $t('score') }}： <span>{{ fight.score }}</span>
               </p>
             </div>
           </div>
@@ -94,7 +94,9 @@ export default {
     }
   },
   created () {
-    this.fetchData();
+    this.$nextTick(()=>{
+      this.fetchData();
+    })
   }
 }
 </script>

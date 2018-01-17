@@ -80,7 +80,7 @@ export const getPrevCurrentResult = state => (questionId) => {
 }
 
 export const isEnd = state => {
-  return state.questions.length === state.currentResults.length ? true : false;
+  return state.questions.length <= state.currentResults.length ? true : false;
 }
 
 export const getFirstRightResult = state => {

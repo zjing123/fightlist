@@ -153,8 +153,8 @@ export default {
       prevResult () {
           this.result = this.getPrevRightResult(this.result.result.id)
       },
-      getAnswers (id) {
-          return this.getResultAnswersByQuestionId(id)
+      getAnswers () {
+          return this.getResultAnswersByQuestionId(this.result.result.id)
       }
     },
     computed: {
@@ -178,10 +178,12 @@ export default {
           'isEnd'
       ]),
       getScore () {
+        console.log(this.getAnswers())
           var score = 0
-          for( let i in this.getAnswers) {
-              if(this.getAnswers[i].score !== undefined) {
-                  score += parseInt(this.getAnswers[i].score, 10);
+          let answers = this.getAnswers();
+          for( let i in answers) {
+              if(answers[i].score !== undefined) {
+                  score += parseInt(answers[i].score, 10);
               }
           }
           return score;

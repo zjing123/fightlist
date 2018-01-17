@@ -162,14 +162,19 @@ export default {
   },
   watch: {
     '$store.state.time': function () {
-      if (this.time <= 0) {
-        let questionId = this.question.id
-        this.result.id = questionId
-        this.result.title = this.question.title
-        this.PUSH_CURRENT_RESULT(this.result)
-        this.PUSH_USED_INDEX(questionId)
-        this.$router.push({name: 'Playresult'})
-      }
+        if (this.time <= 0) {
+            let questionId = this.question.id
+            this.result.id = questionId
+            this.result.title = this.question.title
+            this.PUSH_CURRENT_RESULT(this.result)
+            this.PUSH_USED_INDEX(questionId)
+            this.result = {
+                id: null,
+                title: null,
+                answers: []
+            };
+            this.$router.push({name: 'Playresult'})
+        }
     }
   }
 }

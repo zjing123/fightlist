@@ -18,7 +18,7 @@ const state = {
     currentResults:[],
     results: [],
     rightResults: [],
-    questions: null,
+    questions: [],
     questionGroup:null,
     record_id:null,
     showBack: true,
